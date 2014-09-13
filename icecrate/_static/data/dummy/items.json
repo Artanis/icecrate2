@@ -1,0 +1,63 @@
+[
+  {
+   "_id": "999e734c6071beb91028c3b8a7001178",
+   "_rev": "2-5d0a6e11b1f4eef134e7b0e246df7fa9",
+   "type": "item",
+   "household": "999e734c6071beb91028c3b8a7000ff5",
+   "location": {
+       "garage shelves": 23
+   },
+   "name": "Arrowhead Spring Water (sports cap)",
+   "size": {
+       "units": "fluid ounce",
+       "scalar": 23.7
+   },
+   "upc": "071142643370"
+  },
+  {
+   "_id": "999e734c6071beb91028c3b8a7002d6a",
+   "_rev": "2-ed488bb173bf1a7fd30bdb7de6d177ef",
+   "household": "999e734c6071beb91028c3b8a7001d75",
+   "type": "item",
+   "upc": "071142643370",
+   "name": "Arrowhead Spring Water",
+   "size": {
+       "unit": "fluid ounces",
+       "scalar": 23.7
+   },
+   "location": {
+       "closet": 3
+   }
+  },
+  {
+   "_id": "999e734c6071beb91028c3b8a7003ba7",
+   "_rev": "2-4269b6688b4bb63ba6e37c66c428b35a",
+   "type": "item",
+   "upc": "041163458796",
+   "name": "Albertson's Mint Chip Ice Cream",
+   "location": {
+       "garage freezer": 1
+   },
+   "household": "999e734c6071beb91028c3b8a7000ff5",
+   "size": {
+       "units": "quart",
+       "scalar": 1.5
+   }
+  },
+  {
+   "_id": "999e734c6071beb91028c3b8a70042a2",
+   "_rev": "4-34a0bd559c0c08b810128aa90ece3622",
+   "type": "item",
+   "household": "999e734c6071beb91028c3b8a7000ff5",
+   "upc": "041548039855",
+   "location": {
+       "garage freezer": 1,
+       "kitchen freezer": 1
+   },
+   "size": {
+       "units": "quart",
+       "scalar": 1.5
+   },
+   "name": "Dreyer's French Vanilla Ice Cream"
+  }
+]

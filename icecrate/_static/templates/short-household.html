@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+  <h1><a ng-href="/households/{{household._id}}">{{household.name}}</a></h1>
+  <section class="item-list" ng-controller="ItemList">
+    <ul>
+      <li ng-repeat="item in items | filter:household._id:strict | limitTo:3" ng-include="'templates/short-item.html'">
+      </li>
+    </ul>
+  </section>
+</html>
