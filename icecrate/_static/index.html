@@ -4,6 +4,7 @@
     <title>Icecrate</title>
     <script charset="utf-8" src="js/angular.js"></script>
     <script charset="utf-8" src="js/angular-route.js"></script>
+    <script charset="utf-8" src="js/angular-cache.js"></script>
     <script charset="utf-8" src="js/icecrate.js"></script>
     <script charset="utf-8" src="js/dummy.js"></script>
     <link rel="stylesheet" href="css/master.css" charset="utf-8">
@@ -11,14 +12,9 @@
   <body>
     <header>
       <a href="/"><h1>Icecrate</h1></a>
-      <nav>
-      </nav>
+      <nav></nav>
     </header>
-    <section title="households" ng-controller="HouseholdList">
-      <h1>Your Households</h1>
-      <section class="short-household" ng-repeat="household in households" ng-include="'templates/short-household.html'">
-      </section>
-    </section>
+    <div ng-view>
     <footer>
       <section title="copyright" id="copyright">
         <p>&copy;2014 Erik Youngren</p>

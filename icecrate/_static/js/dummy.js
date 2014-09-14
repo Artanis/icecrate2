@@ -1,17 +1,21 @@
 'use strict';
 
-Icecrate.controller('HouseholdList', function ($scope, $http) {
-  console.log("(Icecrate) Loading households.");
-  $http.get('data/dummy/households.json').success(function (data) {
-    console.log("(Icecrate) Loading households successful.");
-    $scope.households = data;
+Icecrate.factory('Items', function ($http, $q) {
+  var deferred = $q.defer();
+
+  $http.get('data/dummy/items.json', {'cache': true}).success(function (data) {
+    deferred.resolve(data);
   });
+
+  return deferred.promise;
 });
 
-Icecrate.controller('ItemList', function($scope, $http) {
-  console.log("(Icecrate) Loading items.");
-  $http.get('data/dummy/items.json').success(function (data) {
-    console.log("(Icecrate) Loading items successful.");
-    $scope.items = data;
+Icecrate.factory('Households', function ($http, $q) {
+  var deferred = $q.defer();
+
+  $http.get('data/dummy/households.json', {'cache': true}).success(function (data) {
+    deferred.resolve(data);
   });
+
+  return deferred.promise;
 });

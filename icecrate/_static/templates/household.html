@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<section>
+  <h1>{{household.name}}</h1>
+  <section class="item-list" ng-controller="ItemList">
+    <h1>Items</h1>
+    <nav ng-controller="LocationList">
+      <section>
+        <h1>Filter by Name</h1>
+        <input type="text" ng-model="byname"></input>
+      </section>
+      <section>
+        <h1>Filter by Location</h1>
+        <div ng-repeat="(loc, qty) in locations">
+          <input type="checkbox" checked="checked" id="chk-{{loc}}" ng-model="bylocation['{{loc}}']"></input>
+          <label for="chk-{{loc}}" style="text-transform:capitalize;">{{loc}}</label>
+        </div>
+      </section>
+    </nav>
+    <ul>
+      <li ng-repeat="item in items | filter:household._id:strict" ng-include="'templates/short-item.html'">
+      </li>
+    </ul>
+  </section>
+  <section>
+    <h1>Participants</h1>
+    <section>
+      <h1>Members</h1>
+      <a href="#">Invite a new member</a>
+      <ul>
+        <li ng-repeat="member in household.members">
+          {{member}}
+        </li>
+      </ul>
+    </section>
+    <section>
+      <h1>Guests</h1>
+      <a href="#">Invite a guest</a>
+      <ul>
+        <li ng-repeat="guest in household.guests">
+          {{guest}} <a href="#">Remove Guest<a>
+        </li>
+      </ul>
+    </section>
+    <section>
+      <h1>Administration</h1>
+      <section>
+        <h1>Edit Household</h1>
+        <form title="Edit Household Name">
+          <label for="edit-household-name">Edit Name</label>
+          <input type="text" id="edit-household-name" name="edit-household-name" value="{{household.name}}"></input>
+          <input type="submit" value="&Delta;"></input>
+        </form>
+      </section>
+      <section>
+        <h1>Leave this household?</h1>
+        <p>This action cannot be undone!</p>
+        <form>
+          <input type="submit" value="Leave"></input>
+        </form>
+      </section>
+    </section>
+  </section>
+</section>
