@@ -12,13 +12,13 @@
     <section title="locations">
       <h1>Edit Locations</h1>
       <form name="edit_location" ng-repeat="(loc, qty) in item.location" title="edit location">
-        <input type="text" value="{{loc}}"></input>
+        <input type="text" value="{{loc}}" style="text-transform:capitalize;" id="a"></input>
         <input type="number" ng-value="{{qty}}" title="edit quantity"></input>
         <input type="submit" value="&plusmn;" title="update"></input>
       </form>
 
       <form name="new-location" title="new location">
-        <input ng-model="new_loc"></input></td>
+        <input type="text" ng-model="new_loc" style="text-transform:capitalize;" ></input></td>
         <input type="number" min="0" step="1" ng-model="new_qty"></input>
         <input type="submit" value="+" title="add"></input>
       </form>

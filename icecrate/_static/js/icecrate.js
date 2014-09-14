@@ -63,11 +63,17 @@ Icecrate.controller('ItemList', function($scope, Items) {
   });
 });
 
-Icecrate.controller('DetailItem', function($scope, Items, Households, $routeParams) {
-  Households.then(function(data) {
-    console.log(data, $routeParams);
+Icecrate.controller('DetailItem', function($scope, Items, $routeParams) {
+  Items.then(function(data) {
+    for (var key in data) {
+      var item = data[key];
+      if(item.upc === $routeParams.item_upc && item.household === $routeParams.household_id) {
+        $scope.item = item;
+        break;
+      }
+    }
   })
-})
+});
 
 Icecrate.config(function ($routeProvider) {
   $routeProvider.when('/', {
@@ -82,7 +88,7 @@ Icecrate.config(function ($routeProvider) {
     controller:"DetailHousehold",
     templateUrl: "templates/household.html"
   });
-  $routeProvider.when('households/:household_id/items/:item_upc', {
+  $routeProvider.when('/households/:household_id/items/:item_upc', {
     controller: "DetailItem",
     templateUrl: "templates/item.html"
   });
