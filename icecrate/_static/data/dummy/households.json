@@ -1,0 +1,26 @@
+[
+  {
+   "_id": "999e734c6071beb91028c3b8a7000ff5",
+   "_rev": "5-72ec3d2fe2027132f3e889be6975b609",
+   "type": "household",
+   "members": [
+       "alice@example.com",
+       "bob@example.com"
+   ],
+   "name": "Example Household",
+   "guests": [
+       "eve@example.com"
+   ]
+  },
+  {
+   "_id": "999e734c6071beb91028c3b8a7001d75",
+   "_rev": "6-c94c2285286eb205d02f92da8eb79ec8",
+   "type": "household",
+   "name": "Second Example Household",
+   "members": [
+       "bob@example.com",
+       "dan@example.com",
+       "pip@example.com"
+   ]
+  }
+]
