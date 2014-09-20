@@ -22,7 +22,7 @@
    "upc": "071142643370",
    "name": "Arrowhead Spring Water",
    "size": {
-       "unit": "fluid ounce",
+       "units": "fluid ounce",
        "scalar": 23.7
    },
    "location": {
