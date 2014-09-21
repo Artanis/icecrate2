@@ -59,5 +59,18 @@
        "scalar": 1.5
    },
    "name": "Dreyer's French Vanilla Ice Cream"
+  },
+  {
+    "type": "item",
+    "household": "999e734c6071beb91028c3b8a7000ff5",
+    "upc": "07650006950",
+    "location": {
+      "cupboard": 1
+    },
+    "size": {
+      "units": "ounce",
+      "scalar": 6
+    },
+    "name": "Sunrise Milk Caramels"
   }
 ]
