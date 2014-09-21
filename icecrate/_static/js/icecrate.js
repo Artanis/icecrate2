@@ -95,6 +95,10 @@ Icecrate.config(function ($routeProvider) {
   });
 
   // Item (global) routes
+  $routeProvider.when('/items?upc=:item_upc', {
+    "controller":  "ItemList",
+    "templateUrl": "templates/list-items.html"
+  });
   $routeProvider.when('/items', {
     "controller":  "ItemList",
     "templateUrl": "templates/list-items.html"
