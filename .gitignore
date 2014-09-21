@@ -6,8 +6,4 @@ Lib
 Scripts
 Include
 
-angular-cache.js
-angular-data.js
-angular-route.js
-angular.js
-qrcode.js
+vendor
