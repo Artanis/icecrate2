@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Hello Item List!</title>
-  </head>
-</html>
+<section>
+  <h1>Your Items</h1>
+  <ul>
+    <li ng-repeat="item in items | filter:query.name | filter:query.upc" ng-include="'templates/short-item.html'">
+  </ul>
+</section>
