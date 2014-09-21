@@ -17,7 +17,17 @@
   <body>
     <header>
       <a href="/"><h1>Icecrate</h1></a>
-      <nav></nav>
+      <nav>
+        <ul>
+          <li><input type="text" ng-model="byname.name" placeholder="Search items by name"></input></li>
+          <li><input type="text" ng-model="byupc.upc" placeholder="Search items by UPC"></input></li>
+          <li class="mobile" zxing-scanlink></li>
+          <li><a href="#/items">Your Items</a></li>
+          <li><a href="#/households">Your Households</a></li>
+          <li><a href="#/about">About</a></li>
+          <li><a href="#/help">Help</a></li>
+        </ul>
+      </nav>
     </header>
     <div ng-view></div>
     <footer>

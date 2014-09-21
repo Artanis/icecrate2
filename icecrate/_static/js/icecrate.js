@@ -1,6 +1,6 @@
 'use strict';
 
-var Icecrate = angular.module('Icecrate', ['ngRoute', 'angular-data.DSCacheFactory']);
+var Icecrate = angular.module('Icecrate', ['ngRoute', 'angular-data.DSCacheFactory', 'ZXing']);
 
 Icecrate.run(function ($http, DSCacheFactory) {
 
@@ -57,7 +57,7 @@ Icecrate.controller('LocationList', function($scope, Items, $routeParams) {
   }
 )});
 
-Icecrate.controller('ItemList', function($scope, Items) {
+Icecrate.controller('ItemList', function($scope, Items, $routeParams) {
   Items.then(function (data) {
     $scope.items = data;
   });
@@ -76,20 +76,31 @@ Icecrate.controller('DetailItem', function($scope, Items, $routeParams) {
 });
 
 Icecrate.config(function ($routeProvider) {
+    // Household routes
   $routeProvider.when('/', {
-    controller:"HouseholdList",
-    templateUrl:"templates/list-households.html"
+    "controller":  "HouseholdList",
+    "templateUrl": "templates/list-households.html"
   });
   $routeProvider.when('/households', {
-    controller: "HouseholdList",
-    templateUrl: "templates/list-households.html"
+    "controller":  "HouseholdList",
+    "templateUrl": "templates/list-households.html"
   });
   $routeProvider.when('/households/:household_id', {
-    controller:"DetailHousehold",
-    templateUrl: "templates/household.html"
+    "controller":  "DetailHousehold",
+    "templateUrl": "templates/household.html"
   });
   $routeProvider.when('/households/:household_id/items/:item_upc', {
-    controller: "DetailItem",
-    templateUrl: "templates/item.html"
+    "controller":  "DetailItem",
+    "templateUrl": "templates/item.html"
+  });
+
+  // Item (global) routes
+  $routeProvider.when('/items', {
+    "controller":  "ItemList",
+    "templateUrl": "templates/list-items.html"
+  });
+  $routeProvider.when('/items/:item_upc', {
+    "controller":  "DetailItem",
+    "templateUrl": "templates/item.html"
   });
 });

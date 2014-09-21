@@ -5,10 +5,6 @@
     <h1>Items</h1>
     <nav ng-controller="LocationList">
       <section>
-        <h1>Filter by Name</h1>
-        <input type="text" ng-model="byname"></input>
-      </section>
-      <section>
         <h1>Filter by Location</h1>
         <div ng-repeat="(loc, qty) in locations">
           <input type="checkbox" checked="checked" id="chk-{{loc}}" ng-model="bylocation['{{loc}}']"></input>
@@ -17,7 +13,7 @@
       </section>
     </nav>
     <ul>
-      <li ng-repeat="item in items | filter:household._id:strict" ng-include="'templates/short-item.html'">
+      <li ng-repeat="item in items | filter:household._id:strict | filter:byname | filter:byupc:strict" ng-include="'templates/short-item.html'">
       </li>
     </ul>
   </section>
