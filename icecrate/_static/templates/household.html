@@ -13,7 +13,7 @@
       </section>
     </nav>
     <ul>
-      <li ng-repeat="item in items | filter:household._id:strict | filter:query.name | filter:query.upc:strict" ng-include="'templates/short-item.html'">
+      <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict" ng-include="'templates/short-item.html'">
       </li>
     </ul>
   </section>
