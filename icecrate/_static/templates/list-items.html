@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <section>
-  <h1>Your Items</h1>
+  <h1>Items</h1>
   <ul>
     <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc" ng-include="'templates/short-item.html'">
   </ul>
