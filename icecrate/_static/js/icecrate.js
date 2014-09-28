@@ -94,24 +94,20 @@ Icecrate.config(function ($routeProvider) {
   });
   $routeProvider.when('/households/:household_id', {
     "controller":  "DetailHousehold",
-    "templateUrl": "templates/household.html"
+    "templateUrl": "templates/detauil-household.html"
   });
   $routeProvider.when('/households/:household_id/items/:item_upc', {
     "controller":  "DetailItem",
-    "templateUrl": "templates/item.html"
+    "templateUrl": "templates/detail-item.html"
   });
 
   // Item (global) routes
-  $routeProvider.when('/items?upc=:item_upc', {
-    "controller":  "ItemList",
-    "templateUrl": "templates/list-items.html"
-  });
   $routeProvider.when('/items', {
     "controller":  "ItemList",
     "templateUrl": "templates/list-items.html"
   });
-  $routeProvider.when('/items/:item_upc', {
-    "controller":  "DetailItem",
-    "templateUrl": "templates/item.html"
-  });
+  // $routeProvider.when('/items/:item_upc', {
+  //   "controller":  "DetailItem",
+  //   "templateUrl": "templates/detail-item.html"
+  // });
 });
