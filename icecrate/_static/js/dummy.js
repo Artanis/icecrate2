@@ -101,6 +101,25 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
     return deferred.promise;
   };
 
+  this.get_item_by_id = function (_id) {
+    var deferred = $q.defer();
+
+    if (db === null) {
+      deferred.reject("(IcecrateDB.get_item_by_id) `icecrate.db` is not open.");
+    } else if (_id === undefined) {
+      deferred.reject("(IcecrateDB.get_item_by_id) Expected `_id`, got nothing.");
+    } else {
+      var transaction = db.transaction(['items'], 'readonly');
+      var store = transaction.objectStore('items');
+
+      var req = store.get(_id).onsuccess = function (e) {
+        deferred.resolve(e.target.result);
+      };
+    }
+
+    return deferred.promise;
+  };
+
   this.get_items_by_household = function (household_id) {
     var deferred = $q.defer();
 
