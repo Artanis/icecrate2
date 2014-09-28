@@ -7,7 +7,7 @@
       <section>
         <h1>Filter by Location</h1>
         <div ng-repeat="(loc, qty) in locations">
-          <input type="checkbox" checked="checked" id="chk-{{loc}}" ng-model="bylocation['{{loc}}']"></input>
+          <input type="checkbox" checked="checked" id="chk-{{loc}}" ng-model="query.location[loc]"></input>
           <label for="chk-{{loc}}" style="text-transform:capitalize;">{{loc}}</label>
         </div>
       </section>
