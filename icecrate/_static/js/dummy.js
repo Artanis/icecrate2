@@ -203,13 +203,13 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
     return deferred.promise;
   };
 
-  this.add_item = function (itemdata) {
+  this.update_item = function (itemdata) {
     var deferred = $q.defer();
 
     if (db === null) {
-      deferred.reject("(IndexedDB.add_item) `icecrate.db` is not open yet.");
+      deferred.reject("(IndexedDB.update_item) `icecrate.db` is not open yet.");
     } else if (itemdata === undefined) {
-      deferred.reject("(IndexedDB.add_item) Expected item data, got nothing.");
+      deferred.reject("(IndexedDB.update_item) Expected item data, got nothing.");
     } else {
       var transaction = db.transaction(['items'], 'readwrite');
       var store = transaction.objectStore('items');
@@ -282,16 +282,17 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
         deferred.resolve(e.target.result);
       };
     }
+
     return deferred.promise;
   };
 
-  this.add_household = function (householddata) {
+  this.update_household = function (householddata) {
     var deferred = $q.defer();
 
     if (db === null) {
-      deferred.reject("(IndexedDB.add_household) `icecrate.db` is not open yet.");
+      deferred.reject("(IndexedDB.update_household) `icecrate.db` is not open yet.");
     } else if (householddata === undefined) {
-      deferred.reject("(IndexedDB.add_household) Expected household data, got nothing.");
+      deferred.reject("(IndexedDB.update_household) Expected household data, got nothing.");
     } else {
       var transaction = db.transaction(['households'], 'readwrite');
       var store = transaction.objectStore('households');
@@ -331,7 +332,7 @@ IcecrateDB.service('IcecrateDBSync', function ($q, $http, IcecrateDB) {
       var items = data.data;
       for (var i in items) {
         var item = items[i];
-        IcecrateDB.add_item(item);
+        IcecrateDB.update_item(item);
       }
     });
   };
@@ -341,7 +342,7 @@ IcecrateDB.service('IcecrateDBSync', function ($q, $http, IcecrateDB) {
       var households = data.data;
       for (var i in households) {
         var household = households[i];
-        IcecrateDB.add_household(household);
+        IcecrateDB.update_household(household);
       }
     });
   };
