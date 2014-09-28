@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<section ng-controller="ShoppingLists">
+  <h1>Shopping Lists</h1>
+  <ul>
+    <li ng-repeat="list in shopping">
+      <a href="#/households/{{list.household}}/lists/{{list._id}}">{{list.name}}</a>
+    </li>
+  </ul>
+</section>

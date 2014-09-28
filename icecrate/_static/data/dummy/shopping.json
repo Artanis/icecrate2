@@ -1,0 +1,21 @@
+[
+  {
+    "_id": "4e4d7cf0cf1fde8f08371da3c10045c5",
+    "name": "Hyperbowl Party",
+    "household": "999e734c6071beb91028c3b8a7000ff5",
+    "type": "shopping-list",
+    "items": [
+      "999e734c6071beb91028c3b8a7003ba7",
+      "4e4d7cf0cf1fde8f08371da3c10039de"
+    ]
+  },
+  {
+    "_id": "4e4d7cf0cf1fde8f08371da3c10046e5",
+    "name": "Drinks",
+    "household": "999e734c6071beb91028c3b8a7001d75",
+    "type": "shopping-list",
+    "items": [
+      "999e734c6071beb91028c3b8a7002d6a"
+    ]
+  }
+]

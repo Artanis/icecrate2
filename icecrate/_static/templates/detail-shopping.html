@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<section>
+  <header>
+    <h1>{{list.name}}</h1>
+    <p><a href="#/households/{{household._id}}">{{household.name}}</a></p>
+  </header>
+
+  <ul>
+    <li ng-repeat="item in items" ng-include="'templates/short-item.html'"></li>
+    <li class="mobile" zxing-scanlink></li>
+  </ul>
+</section>
