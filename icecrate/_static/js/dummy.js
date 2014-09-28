@@ -8,7 +8,7 @@ IcecrateDB.service('KeyGenerator', function ($q, $http) {
   // TODO: proxy this through python
   var src = 'http://192.168.0.20:5984/_uuids';
 
-  this.uuid = function uuid () {
+  this.uuid = function () {
     var deferred = $q.defer();
 
     var req = $http.get(src, {'cache': false});
