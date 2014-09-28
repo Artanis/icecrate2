@@ -1,12 +1,16 @@
 'use strict';
 
-var Icecrate = angular.module('Icecrate', ['ngRoute', 'angular-data.DSCacheFactory', 'ZXing']);
+var Icecrate = angular.module('Icecrate', ['ngRoute', 'ZXing', 'icecrate.db']);
 
-Icecrate.run(function ($http, DSCacheFactory) {
+Icecrate.run(function($rootScope, $location, IcecrateDB, IcecrateDBSync) {
+  IcecrateDB.open().then(IcecrateDBSync.pull.apply(IcecrateDBSync));
 
-  DSCacheFactory('Icecrate', {'storageMode': 'localStorage'});
-
-  $http.defaults.cache = DSCacheFactory.get('Icecrate');
+  var params = $location.search();
+  $rootScope.query = {
+    "upc": params.upc || "",
+    "name": params.name || "",
+    "location": {}
+  };
 });
 
 Icecrate.filter('sumvals', function () {
@@ -19,60 +23,63 @@ Icecrate.filter('sumvals', function () {
   };
 });
 
-Icecrate.controller('HouseholdList', function ($scope, Households) {
-  Households.then(function (data) {
+Icecrate.controller('HouseholdList', function ($scope, IcecrateDB) {
+  IcecrateDB.all_households().then(function (data) {
     $scope.households = data;
   });
 });
 
-Icecrate.controller('DetailHousehold', function($scope, Households, $routeParams) {
-  Households.then(function(data) {
-    for (var household in data) {
-      if (data[household]._id === $routeParams.household_id) {
-        $scope.household = data[household];
-        break;
+Icecrate.controller('DetailHousehold', function($scope, IcecrateDB, $routeParams) {
+  IcecrateDB.get_household_by_id($routeParams.household_id).then(function (data) {
+    $scope.household = data;
+  });
+});
+
+Icecrate.controller('LocationList', function($scope, IcecrateDB, $routeParams) {
+  IcecrateDB.get_items_by_household($routeParams.household_id).then(function (data) {
+    $scope.locations = {};
+    for (var i in data) {
+      var item = data[i];
+
+      for (var j in item.location) {
+        if ($scope.locations[j] === undefined) {
+          $scope.locations[j] = item.location[j];
+        }
       }
     }
   });
 });
 
-Icecrate.controller('LocationList', function($scope, Items, $routeParams) {
-  Items.then(function (data) {
-    var results = {};
+Icecrate.controller('ItemList', function($scope, IcecrateDB, $routeParams) {
+  var items = null;
 
-    for (var key in data) {
-      var item = data[key];
-
-      if (item.household === $routeParams.household_id) {
-        for (var key in item.location) {
-          var qty = item.location[key];
-          if (results[key] === undefined) {
-            results[key] = 0;
-          }
-          results[key] += qty
-        }
-      }
-    }
-    $scope.locations = results;
+  if ($routeParams.household_id !== undefined) {
+    items = IcecrateDB.get_items_by_household($routeParams.household_id);
+  } else {
+    items = IcecrateDB.all_items();
   }
-)});
 
-Icecrate.controller('ItemList', function($scope, Items, $routeParams) {
-  Items.then(function (data) {
+  items.then(function (data) {
     $scope.items = data;
   });
 });
 
-Icecrate.controller('DetailItem', function($scope, Items, $routeParams) {
-  Items.then(function(data) {
-    for (var key in data) {
-      var item = data[key];
-      if(item.upc === $routeParams.item_upc && item.household === $routeParams.household_id) {
-        $scope.item = item;
-        break;
-      }
-    }
-  })
+Icecrate.controller('DetailItem', function($scope, IcecrateDB, $routeParams) {
+  console.log($routeParams);
+  var req = IcecrateDB.get_item_by_household_and_upc($routeParams.household_id, $routeParams.item_upc);
+  req.then(function (data) {
+    console.log(data);
+    $scope.item = data;
+  });
+  // Items.then(function(data) {
+  //   for (var key in data) {
+  //     var item = data[key];
+  //     if(item.upc === $routeParams.item_upc && item.household === $routeParams.household_id) {
+  //       $scope.item = item;
+  //       break;
+  //     }
+  //   }
+  // })
 });
 
 Icecrate.config(function ($routeProvider) {
