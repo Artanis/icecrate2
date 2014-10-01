@@ -1,0 +1,8 @@
+CouchDB==0.10
+WebOb==1.4
+future==0.13.1
+morepath==0.6
+reg==0.8
+repoze.lru==0.6
+requests==2.4.1
+venusifork==2.0a2

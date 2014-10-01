@@ -1,0 +1,8 @@
+COUCHDB_SERVER_ADDR = "192.168.0.20"
+COUCHDB_SERVER_PORT = "5984"
+DB_NAME = 'icecrate'
+DB_USER = 'icecrate'
+DB_PASS = '2af07ded0ba9e33b4e8bf0ddf13f9c5d7416149c21313e7c0367974cc0497e9e'
+TEMP_ADMIN_USER = 'admin'
+TEMP_ADMIN_PASS = 'password'
+TEMP_USER_DB    = "_users"
