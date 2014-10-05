@@ -10,7 +10,7 @@ setup(name="icecrate2",
   include_package_data=True,
   zip_safe=False,
   install_requires=[
-    "morepath",
+    "bottlepy",
     "couchdb"
   ],
   entry_points={

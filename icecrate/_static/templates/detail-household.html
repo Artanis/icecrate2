@@ -13,11 +13,11 @@
       </section>
     </nav>
     <ul>
-      <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict" ng-include="'templates/short-item.html'">
+      <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict" ng-include="'/static/templates/short-item.html'">
       </li>
     </ul>
   </section>
-  <div ng-controller="ShoppingLists" ng-include="'templates/list-shopping.html'">
+  <div ng-controller="ShoppingLists" ng-include="'/static/templates/list-shopping.html'">
   </div>
   <section>
     <h1>Participants</h1>

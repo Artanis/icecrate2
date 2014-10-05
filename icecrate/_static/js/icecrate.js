@@ -114,32 +114,32 @@ Icecrate.config(function ($routeProvider) {
   // Household-scoped routes
   $routeProvider.when('/', {
     "controller":  "HouseholdList",
-    "templateUrl": "templates/list-households.html"
+    "templateUrl": "/static/templates/list-households.html"
   });
   $routeProvider.when('/households', {
     "controller":  "HouseholdList",
-    "templateUrl": "templates/list-households.html"
+    "templateUrl": "/static/templates/list-households.html"
   });
   $routeProvider.when('/households/:household_id', {
     "controller":  "DetailHousehold",
-    "templateUrl": "templates/detail-household.html"
+    "templateUrl": "/static/templates/detail-household.html"
   });
   $routeProvider.when('/households/:household_id/items/:item_upc', {
     "controller":  "DetailItem",
-    "templateUrl": "templates/detail-item.html"
+    "templateUrl": "/static/templates/detail-item.html"
   });
   $routeProvider.when('/households/:household_id/lists/:list_id', {
     "controller": "ShoppingListDetail",
-    "templateUrl": "templates/detail-shopping.html"
+    "templateUrl": "/static/templates/detail-shopping.html"
   });
 
   // Globally-scoped routes
   $routeProvider.when('/items', {
     "controller":  "ItemList",
-    "templateUrl": "templates/list-items.html"
+    "templateUrl": "/static/templates/list-items.html"
   });
   $routeProvider.when('/lists', {
     "controller": "ShoppingLists",
-    "templateUrl": "templates/list-shopping.html"
+    "templateUrl": "/static/templates/list-shopping.html"
   });
 });

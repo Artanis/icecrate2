@@ -3,7 +3,7 @@
   <h1><a ng-href="#/households/{{household._id}}">{{household.name}}</a></h1>
   <section class="item-list" ng-controller="ItemList">
     <ul>
-      <li ng-repeat="item in items | orderBy:'name' | filter:household._id:strict | filter:query.name | filter:query.upc | limitTo:3" ng-include="'templates/short-item.html'">
+      <li ng-repeat="item in items | orderBy:'name' | filter:household._id:strict | filter:query.name | filter:query.upc | limitTo:3" ng-include="'/static/templates/short-item.html'">
       </li>
     </ul>
   </section>
