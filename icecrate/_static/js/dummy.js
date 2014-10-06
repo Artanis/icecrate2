@@ -3,15 +3,10 @@
 var IcecrateDB = angular.module('icecrate.db', []);
 
 IcecrateDB.service('KeyGenerator', function ($q, $http) {
-  // Get a new UUID from CouchDB install.
-  // dev-local raspberrypi (easier than mocking UUIDs)
-  // TODO: proxy this through python
-  var src = 'http://192.168.0.20:5984/_uuids';
-
   this.uuid = function () {
     var deferred = $q.defer();
 
-    var req = $http.get(src, {'cache': false});
+    var req = $http.get("/_uuids", {'cache': false});
     req.success(function (data) {
       deferred.resolve(data.uuids[0]);
     });
@@ -216,11 +211,9 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
 
       var req = index.get([household_id, upc]);
       req.onsuccess = function (e) {
-        console.log(e.target.result);
         deferred.resolve(e.target.result);
       };
       req.onerror = function (e) {
-        console.log(e);
         deferred.reject(e.value);
       };
     }
@@ -241,6 +234,7 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
 
       // might need to wait for UUID before insertion, so either wrap
       // the existing id in a promise, or wait for the key generator.
+      console.log(itemdata);
       var _id = $q.when(itemdata._id || KeyGenerator.uuid());
       _id.then(
         function (data) {
@@ -458,10 +452,10 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
   };
 });
 
-IcecrateDB.service('IcecrateDBSync', function ($q, $http, IcecrateDB) {
-  var items_url         = 'data/dummy/items.json';
-  var households_url    = 'data/dummy/households.json';
-  var shopping_list_url = 'data/dummy/shopping.json';
+IcecrateDB.service('IcecrateDBSync', function ($rootScope, $q, $http, IcecrateDB) {
+  var households_url    = '/households';
+  var shopping_list_url = '/lists';
+  var items_url         = '/items';
 
   this.pull = function () {
     return $q.all(
@@ -472,17 +466,17 @@ IcecrateDB.service('IcecrateDBSync', function ($q, $http, IcecrateDB) {
 
   this.pull_items = function () {
     return $http.get(items_url).then(function (data) {
-      var items = data.data;
+      var items = data.data.items;
       for (var i in items) {
-        var item = items[i];
-        IcecrateDB.update_item(item);
-      }
+         var item = items[i];
+         IcecrateDB.update_item(item);
+       }
     });
   };
 
   this.pull_households = function () {
     return $http.get(households_url).then(function (data) {
-      var households = data.data;
+      var households = data.data.households;
       for (var i in households) {
         var household = households[i];
         IcecrateDB.update_household(household);
@@ -492,7 +486,7 @@ IcecrateDB.service('IcecrateDBSync', function ($q, $http, IcecrateDB) {
 
   this.pull_shopping_lists = function () {
     return $http.get(shopping_list_url).then(function (data) {
-      var lists = data.data;
+      var lists = data.data.lists;
       for (var i in lists) {
         var list = lists[i];
         IcecrateDB.update_shopping_list(list);
@@ -508,29 +502,38 @@ IcecrateDB.service('IcecrateDBSync', function ($q, $http, IcecrateDB) {
   };
 
   this.push_items = function () {
-    var msg =
-      "(IcecrateDBSync.push_items) Changes not pushed to remote: "+
-      "using development data.";
-
-    console.log(msg);
-    return $q.reject(msg);
+    return IcecrateDB.all_items().then(function (data) {
+      $http.post(items_url, {'items': data}).then(function (data) {
+        console.log(data);
+      });
+    });
   };
 
-  this.push_housholds = function () {
-    var msg =
-      "(IcecrateDBSync.push_households) Changes not pushed to remote: "+
-      "using development data.";
-
-    console.log(msg);
-    return $q.reject(msg);
+  this.push_households = function () {
+    return IcecrateDB.all_households().then(function (data) {
+      $http.post(households_url, {'households': data}).then(function (data) {
+        console.log(data);
+      });
+    });
   };
 
   this.push_shopping_lists = function () {
-    var msg =
-      "(IcecrateDBSync.push_shopping_lists) Changes not pushed to remote: "+
-      "using development data.";
+    return IcecrateDB.all_shopping_lists().then(function (data) {
+      $http.post(shopping_list_url, {'lists': data}).then(function (data) {
+        console.log(data);
+      });
+    });
+  };
+});
 
-    console.log(msg);
-    return $q.reject(msg);
+IcecrateDB.service('IcecrateLocal', function ($window, $q) {
+  var local = $window.localStorage;
+
+  this.set = function (key, value) {
+    return local.setItem(key, value);
+  };
+
+  this.get = function (key, value) {
+    return local.getItem(key) || value;
   };
 });

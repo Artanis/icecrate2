@@ -110,6 +110,22 @@ Icecrate.controller('ShoppingListDetail', function ($scope, IcecrateDB, $routePa
   });
 });
 
+Icecrate.controller('SyncState', function ($scope, IcecrateLocal, IcecrateDBSync) {
+  $scope.sync = {};
+  $scope.sync.last_sync = parseInt(IcecrateLocal.get('icecrate.sync.lastsync'));
+
+  $scope.sync.pull_changes = function () {
+    IcecrateDBSync.pull().then(function (data) {
+      $scope.sync.last_sync = new Date().getTime();
+      IcecrateLocal.set('icecrate.sync.lastsync', $scope.sync.last_sync)
+    });
+  };
+
+  $scope.sync.push_changes = function () {
+    IcecrateDBSync.push();
+  };
+});
+
 Icecrate.config(function ($routeProvider) {
   // Household-scoped routes
   $routeProvider.when('/', {

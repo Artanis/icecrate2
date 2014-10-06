@@ -28,6 +28,11 @@
           <li><a href="#/help">Help</a></li>
         </ul>
       </nav>
+      <section ng-controller="SyncState">
+        <h1>Last sync was on {{sync.last_sync | date : "medium"}}</h1>
+        <p><a href="" ng-click="sync.pull_changes()">Get changes now</a></p>
+        <p><a href="" ng-click="sync.push_changes()">Push changes now</a></p>
+      </section>
     </header>
     <div ng-view></div>
     <footer>
