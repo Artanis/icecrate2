@@ -23,7 +23,7 @@
     <h1>Participants</h1>
     <section>
       <h1>Members</h1>
-      <a href="#">Invite a new member</a>
+      <a href="">Invite a new member</a>
       <ul>
         <li ng-repeat="member in household.members">
           {{member}}
@@ -32,10 +32,10 @@
     </section>
     <section>
       <h1>Guests</h1>
-      <a href="#">Invite a guest</a>
+      <a href="">Invite a guest</a>
       <ul>
         <li ng-repeat="guest in household.guests">
-          {{guest}} <a href="#">Remove Guest<a>
+          {{guest}} <a href="" ng-click="remove_guest(guest)">Remove<a>
         </li>
       </ul>
     </section>
@@ -46,7 +46,7 @@
         <form title="Edit Household Name">
           <label for="edit-household-name">Edit Name</label>
           <input type="text" id="edit-household-name" name="edit-household-name" ng-model="household.name"></input>
-          <input type="submit" value="&Delta;"></input>
+          <input type="submit" value="Save Changes" ng-click="update_household();"></input>
         </form>
       </section>
       <section>

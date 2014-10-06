@@ -234,22 +234,24 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
 
       // might need to wait for UUID before insertion, so either wrap
       // the existing id in a promise, or wait for the key generator.
-      console.log(itemdata);
       var _id = $q.when(itemdata._id || KeyGenerator.uuid());
-      _id.then(
-        function (data) {
+      _id.then(function (data) {
+          console.log("confirming id.")
           itemdata._id = data;
-      }).then(
-        function () {
+      }).then(function () {
+        console.log("storing item.")
         var req = store.put(itemdata);
-        req.onsuccess = function (e) {
+        req.oncomplete = function (e) {
+          console.log("success!");
           deferred.resolve();
         };
         req.onerror = function (e) {
+          console.log("fail.");
           deferred.reject(e.value);
         };
       });
     }
+    console.log("return promise.");
 
     return deferred.promise;
   };
@@ -323,7 +325,8 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
       }).then(
         function () {
         var req = store.put(householddata);
-        req.onsuccess = function (e) {
+        req.oncomplete = function (e) {
+          console.log("success!");
           deferred.resolve();
         };
         req.onerror = function (e) {
@@ -439,7 +442,8 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
       }).then(
         function (data) {
           var req = store.put(shoppinglistdata);
-          req.onsuccess = function (e) {
+          req.oncomplete = function (e) {
+            console.log("success!");
             deferred.resolve(e.value);
           };
           req.onerror = function (e) {

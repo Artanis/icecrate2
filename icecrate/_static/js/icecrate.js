@@ -3,7 +3,7 @@
 var Icecrate = angular.module('Icecrate', ['ngRoute', 'ZXing', 'icecrate.db']);
 
 Icecrate.run(function($rootScope, $location, IcecrateDB, IcecrateDBSync) {
-  IcecrateDB.open().then(IcecrateDBSync.pull.apply(IcecrateDBSync));
+  IcecrateDB.open();
 
   var params = $location.search();
   $rootScope.query = {
@@ -32,6 +32,14 @@ Icecrate.controller('HouseholdList', function ($scope, IcecrateDB) {
 Icecrate.controller('DetailHousehold', function($scope, IcecrateDB, $routeParams) {
   IcecrateDB.get_household_by_id($routeParams.household_id).then(function (data) {
     $scope.household = data;
+    $scope.update_household = function () {
+      IcecrateDB.update_household($scope.household).then(function (data) {
+        console.log("success!");
+      });
+    };
+    $scope.remove_guest = function (user_id) {
+      household.guests.splice(household.guests.indexOf(user_id), 1);
+    }
   });
 });
 
@@ -65,10 +73,30 @@ Icecrate.controller('ItemList', function($scope, IcecrateDB, $routeParams) {
 });
 
 Icecrate.controller('DetailItem', function($scope, IcecrateDB, $routeParams) {
-  console.log($routeParams);
   var req = IcecrateDB.get_item_by_household_and_upc($routeParams.household_id, $routeParams.item_upc);
   req.then(function (data) {
     $scope.item = data;
+    $scope.update_item = function () {
+      // remove empty locations
+      var item = $scope.item;
+      for (var i in item.location) {
+        if (item.location[i] < 1) {
+          delete item.location[i];
+        }
+      }
+
+      IcecrateDB.update_item(item);
+    };
+    $scope.add_location = function () {
+      var new_loc = $scope.new_loc;
+
+      if (new_loc !== "" && new_loc !== undefined && new_loc !== null) {
+        $scope.item.location[new_loc.toLocaleLowerCase()] = $scope.new_qty || 0;
+        $scope.new_loc = "";
+        $scope.new_qty = "";
+      }
+    };
+
   });
 });
 
