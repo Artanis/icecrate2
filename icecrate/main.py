@@ -4,6 +4,7 @@ from pprint import pprint
 import couchdb
 import bottle
 
+from icecrate import auth
 from icecrate import config
 from icecrate import db, db_server
 
@@ -142,6 +143,8 @@ def update_items():
     "type": "bulk_update_items",
     "data": response
   }
+
+app.mount("/auth/", auth.app)
 
 def main():
   bottle.run(app, host=config.HOST, port=config.PORT)
