@@ -6,11 +6,13 @@
     <!-- Third-party -->
     <script src="/static/bower/angular/angular.js"></script>
     <script src="/static/bower/angular-route/angular-route.js"></script>
+    <script src="/static/bower/satellizer/satellizer.js"></script>
 
     <!-- Project -->
     <script src="/static/local/icecrate/icecrate.js"></script>
     <link href="/static/local/icecrate/master.css" charset="utf-8" rel="stylesheet">
-    <script src="/static/local/icecrate-db/dummy.js"></script>
+    <script src="/static/local/icecrate-user/icecrate-user.js"></script>
+    <script src="/static/local/icecrate-db/icecrate-db.js"></script>
     <script src="/static/local/zxing/zxing.js"></script>
   </head>
   <body>
@@ -24,6 +26,7 @@
           <li><a href="#/items">Items</a></li>
           <li><a href="#/households">Households</a></li>
           <li><a href="#/lists">Shopping Lists</a></li>
+          <li user-signin></li>
           <li><a href="#/about">About</a></li>
           <li><a href="#/help">Help</a></li>
         </ul>

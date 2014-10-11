@@ -1,6 +1,6 @@
 'use strict';
 
-var Icecrate = angular.module('Icecrate', ['ngRoute', 'ZXing', 'icecrate.db']);
+var Icecrate = angular.module('Icecrate', ['ngRoute', 'ZXing', 'icecrate.db', 'icecrate.user']);
 
 Icecrate.run(function($rootScope, $location, IcecrateDB, IcecrateDBSync) {
   IcecrateDB.open();

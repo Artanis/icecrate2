@@ -21,5 +21,5 @@ TEMP_USER_DB    = "_users"
 
 # OPENID
 OPENID_COOKIE_NAME = "icecrate-auth-openid"
-OPENID_IMMEDITATE_MODE = False
+OPENID_IMMEDIATE_MODE = False
 OPENID_STATELESS = False
