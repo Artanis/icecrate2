@@ -9,23 +9,32 @@ from icecrate import config
 from icecrate import db, db_server
 
 APP_ROOT = os.path.dirname(__file__)
-STATIC_ROOT = os.path.join(APP_ROOT, "_static")
+BOWER_COMPONENTS = os.path.join(APP_ROOT, "bower_components")
+LOCAL_COMPONENTS = os.path.join(APP_ROOT, "local_components")
 
 app = bottle.Bottle()
 
 @app.get("")
 @app.get("/")
 def static_index():
-  return bottle.static_file("index.html", root=STATIC_ROOT)
+  return bottle.static_file("index.html",
+    root=os.path.join(LOCAL_COMPONENTS, "icecrate"))
 
 @app.get("/cache.manifest")
 def cache_manifest():
   # this is absolutely off right now.
+  # return bottle.static_file("cache.manfest",
+  #   root=os.path.join(LOCAL_COMPONENTS, "icecrate"))
   pass
 
-@app.get("/static/<filepath:path>")
-def static_files(filepath):
-  return bottle.static_file(filepath, root=STATIC_ROOT)
+@app.get("/static/<src:re:(bower|local)>/<filepath:path>")
+def static_files(src, filepath):
+  if src == "local":
+    root = LOCAL_COMPONENTS
+  elif src == "bower":
+    root = BOWER_COMPONENTS
+
+  return bottle.static_file(filepath, root=root)
 
 @app.get("/_uuids")
 def uuids():

@@ -1,0 +1,22 @@
+{
+  "name": "icecrate",
+  "version": "0.4.0",
+  "homepage": "https://github.com/Artanis/icecrate2",
+  "authors": [
+    "Erik Youngren <artanis.00@gmail.com>"
+  ],
+  "license": "None",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-qr": "~0.2.0",
+    "angular-route": "~1.2.26",
+    "angularjs": "~1.2.26"
+  }
+}
