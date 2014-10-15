@@ -6,6 +6,7 @@ var Icecrate = angular.module(
     'ngRoute',
     'ZXing',
     'icecrate.db',
+    'icecrate.sync',
     'icecrate.user',
     'icecrate.households',
     'icecrate.lists',
@@ -39,21 +40,5 @@ Icecrate.filter('sumvals', function () {
       sum = sum + data[key];
     }
     return sum;
-  };
-});
-
-Icecrate.controller('SyncState', function ($scope, IcecrateLocal, IcecrateDBSync) {
-  $scope.sync = {};
-  $scope.sync.last_sync = parseInt(IcecrateLocal.get('icecrate.sync.lastsync'));
-
-  $scope.sync.pull_changes = function () {
-    IcecrateDBSync.pull().then(function (data) {
-      $scope.sync.last_sync = new Date().getTime();
-      IcecrateLocal.set('icecrate.sync.lastsync', $scope.sync.last_sync)
-    });
-  };
-
-  $scope.sync.push_changes = function () {
-    IcecrateDBSync.push();
   };
 });
