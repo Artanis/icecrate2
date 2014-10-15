@@ -1,6 +1,6 @@
 'use strict';
 
-var IcecrateDB = angular.module('icecrate.db', []);
+var IcecrateDB = angular.module('icecrate.store', []);
 
 IcecrateDB.service('KeyGenerator', function ($q, $http) {
   this.uuid = function () {

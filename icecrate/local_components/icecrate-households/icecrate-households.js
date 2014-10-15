@@ -4,7 +4,7 @@ var __icecrate_households = angular.module(
   'icecrate.households',
   [
     'ngRoute',
-    'icecrate.db'
+    'icecrate.store'
   ]
 );
 

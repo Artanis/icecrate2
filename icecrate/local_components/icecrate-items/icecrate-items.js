@@ -4,7 +4,7 @@ var __icecrate_items = angular.module(
   "icecrate.items",
   [
     'ngRoute',
-    'icecrate.db'
+    'icecrate.store'
   ]
 );
 

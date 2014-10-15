@@ -5,7 +5,7 @@ var Icecrate = angular.module(
   [
     'ngRoute',
     'ZXing',
-    'icecrate.db',
+    'icecrate.store',
     'icecrate.sync',
     'icecrate.user',
     'icecrate.households',

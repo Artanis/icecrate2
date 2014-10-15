@@ -3,7 +3,7 @@
 var __icecrate_sync = angular.module(
   'icecrate.sync',
   [
-    'icecrate.db'
+    'icecrate.store'
   ]
 );
 

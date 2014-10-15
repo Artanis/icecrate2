@@ -4,7 +4,7 @@ var __icecrate_lists = angular.module(
   'icecrate.lists',
   [
     'ngRoute',
-    'icecrate.db'
+    'icecrate.store'
   ]);
 
 __icecrate_lists.config(function ($routeProvider) {
