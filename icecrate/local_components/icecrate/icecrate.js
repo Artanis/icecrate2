@@ -1,6 +1,6 @@
 'use strict';
 
-var Icecrate = angular.module('Icecrate', ['ngRoute', 'ZXing', 'icecrate.db', 'icecrate.user']);
+var Icecrate = angular.module('Icecrate', ['ngRoute', 'ZXing', 'icecrate.db', 'icecrate.user', 'icecrate.items']);
 
 Icecrate.run(function($rootScope, $location, IcecrateDB, IcecrateDBSync) {
   IcecrateDB.open();
@@ -55,48 +55,6 @@ Icecrate.controller('LocationList', function($scope, IcecrateDB, $routeParams) {
         }
       }
     }
-  });
-});
-
-Icecrate.controller('ItemList', function($scope, IcecrateDB, $routeParams) {
-  var items = null;
-
-  if ($routeParams.household_id !== undefined) {
-    items = IcecrateDB.get_items_by_household($routeParams.household_id);
-  } else {
-    items = IcecrateDB.all_items();
-  }
-
-  items.then(function (data) {
-    $scope.items = data;
-  });
-});
-
-Icecrate.controller('DetailItem', function($scope, IcecrateDB, $routeParams) {
-  var req = IcecrateDB.get_item_by_household_and_upc($routeParams.household_id, $routeParams.item_upc);
-  req.then(function (data) {
-    $scope.item = data;
-    $scope.update_item = function () {
-      // remove empty locations
-      var item = $scope.item;
-      for (var i in item.location) {
-        if (item.location[i] < 1) {
-          delete item.location[i];
-        }
-      }
-
-      IcecrateDB.update_item(item);
-    };
-    $scope.add_location = function () {
-      var new_loc = $scope.new_loc;
-
-      if (new_loc !== "" && new_loc !== undefined && new_loc !== null) {
-        $scope.item.location[new_loc.toLocaleLowerCase()] = $scope.new_qty || 0;
-        $scope.new_loc = "";
-        $scope.new_qty = "";
-      }
-    };
-
   });
 });
 
@@ -177,11 +135,7 @@ Icecrate.config(function ($routeProvider) {
     "templateUrl": "/static/local/icecrate/templates/detail-shopping.html"
   });
 
-  // Globally-scoped routes
-  $routeProvider.when('/items', {
-    "controller":  "ItemList",
-    "templateUrl": "/static/local/icecrate/templates/list-items.html"
-  });
+
   $routeProvider.when('/lists', {
     "controller": "ShoppingLists",
     "templateUrl": "/static/local/icecrate/templates/list-shopping.html"
