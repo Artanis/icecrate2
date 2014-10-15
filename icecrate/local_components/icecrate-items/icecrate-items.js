@@ -15,6 +15,16 @@ __icecrate_items.config(function ($routeProvider) {
   });
 });
 
+__icecrate_items.filter('sumvals', function () {
+  return function (data) {
+    var sum = 0;
+    for (var key in data) {
+      sum = sum + data[key];
+    }
+    return sum;
+  };
+});
+
 __icecrate_items.controller('ItemList', function($scope, IcecrateDB, $routeParams) {
   var items = null;
 

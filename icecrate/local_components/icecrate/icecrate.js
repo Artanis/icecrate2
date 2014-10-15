@@ -32,13 +32,3 @@ Icecrate.run(function($rootScope, $location, IcecrateDB, IcecrateDBSync) {
     "location": {}
   };
 });
-
-Icecrate.filter('sumvals', function () {
-  return function (data) {
-    var sum = 0;
-    for (var key in data) {
-      sum = sum + data[key];
-    }
-    return sum;
-  };
-});
