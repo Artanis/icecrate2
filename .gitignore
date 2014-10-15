@@ -7,3 +7,7 @@ Scripts
 Include
 
 bower_components
+
+oauth_cfg.py
+
+server.pem

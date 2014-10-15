@@ -1,3 +1,8 @@
+try:
+  from icecrate.oauth_cfg import *
+except ImportError:
+  print("No oauth config found!")
+
 # Server
 HOST = 'localhost'
 PORT = '8000'
@@ -17,9 +22,3 @@ DB_PASS = '2af07ded0ba9e33b4e8bf0ddf13f9c5d7416149c21313e7c0367974cc0497e9e'
 TEMP_ADMIN_USER = 'admin'
 TEMP_ADMIN_PASS = 'password'
 TEMP_USER_DB    = "_users"
-
-
-# OPENID
-OPENID_COOKIE_NAME = "icecrate-auth-openid"
-OPENID_IMMEDIATE_MODE = False
-OPENID_STATELESS = False

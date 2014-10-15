@@ -11,7 +11,9 @@ setup(name="icecrate2",
   zip_safe=False,
   install_requires=[
     "bottlepy",
-    "couchdb"
+    "couchdb",
+    "requests",
+    "requests-oauthlib"
   ],
   entry_points={
     'console_scripts': [

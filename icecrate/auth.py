@@ -2,93 +2,41 @@ import urllib.parse
 import uuid
 
 import bottle
-import openid
-from openid.consumer.consumer import Consumer, DiscoveryFailure
-from openid.extensions import pape, sreg
+import requests_oauthlib as oauth
 
 from icecrate import config
 
 app = bottle.Bottle()
 
-if config.OPENID_STATELESS:
-  from openid.store.memstore import MemoryStore
-  store = MemoryStore()
-else:
-  store = None
+session = {}
 
-sessions = {}
+@app.get("/login")
+def handle_login():
+  google = oauth.OAuth2Session(
+    client_id    = config.OAUTH_GOOGLE_CLIENT_ID,
+    redirect_uri = config.OAUTH_GOOGLE_REDIRECT,
+    scope        = config.OAUTH_GOOGLE_SCOPES)
 
-def base_url():
-  urlparts = bottle.request.urlparts
-  baseparts = (urlparts.scheme, urlparts.netloc, "", "", "", "")
-  return urllib.parse.urlunparse(baseparts)
+  auth_uri, state = google.authorization_url(
+    config.OAUTH_GOOGLE_AUTH_URI,
+    approval_prompt='force')
 
-def verify(return_to=None):
-  pass
+  session['oauth_state'] = state
 
-def user_session():
-  session_id = bottle.request.cookies.get(config.OPENID_COOKIE_NAME)
+  bottle.redirect(auth_uri)
 
-  if session_id:
-    # retrieve session
-    session = sessions.get(session_id)
-  else:
-    # make session
-    # StackOverflow suggests this isn't very secure for session
-    # identifiers, but offered recommendations that use os.urandom(),
-    # same as the UUID module's fully random identifiers. ¯\_('')_/¯
-    session_id = str(uuid.uuid4())
-    sessions[session_id] = {}
-    sessions[session_id]['id'] = session_id
-
-  return sessions.get(session_id)
-
-@app.post("/verify")
-def handle_verify():
-  """Begin user authentication with OpenID indentifying party.
-
-  """
-  global store
-
-  openid_req = bottle.request.json.get('openid')
-  openid_url = openid_req.get('url')
-
-  consumer = Consumer(user_session(), store)
-
-  try:
-    request = consumer.begin(openid_url)
-  except DiscoveryFailure as e:
-    # TODO: Error handling!
-    raise
-
-  if request:
-    # Add data requests for email, nickname and possibly full name.
-    request.addExtension(sreg.SRegRequest(
-      required=['email'], optional=['nickname', 'fullname']))
-    # Add phishing resistant
-    request.addExtension(pape.Request([pape.AUTH_PHISHING_RESISTANT]))
-
-    trust_root = base_url()
-    return_to = app.get_url("process")
-
-    print("redirecting!")
-    redirection = request.redirectURL(
-      trust_root, return_to, immediate=config.OPENID_IMMEDIATE_MODE)
-    return redirection
-  else:
-    print("no service found for {0}!".format(openid_url))
-
-@app.post("/process", name="process")
+@app.get("/process")
 def handle_process():
-  consumer = Consumer(user_session(), store)
+  google = oauth.OAuth2Session(
+    client_id    = config.OAUTH_GOOGLE_CLIENT_ID,
+    redirect_uri = config.OAUTH_GOOGLE_REDIRECT,
+    state =        session['oauth_state'])
 
-  url = 'http://{0}/{1}'.format(
-    bottle.request.headers.get('Host'),
-    bottle.request.path)
-  info = consumer.complete(bottle.request.query_string, url)
+  token = google.fetch_token(
+    config.OAUTH_GOOGLE_TOKEN_URI,
+    client_secret=config.OAUTH_GOOGLE_SECRET,
+    code=bottle.request.GET.get('code'))
 
-  sreg_resp = None
-  pape_resp = None
-  display_id = info.getDisplayIdentifier()
+  req = google.get('https://www.googleapis.com/oauth2/v1/userinfo')
 
-  print(info)
+  print(req.content)
