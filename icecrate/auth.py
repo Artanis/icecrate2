@@ -1,6 +1,7 @@
 import json
 import urllib.parse
 import uuid
+from collections import namedtuple
 
 import bottle
 import requests_oauthlib as oauth
@@ -11,7 +12,8 @@ app = bottle.Bottle()
 
 oauth_state = None
 
-def Sessions:
+UserSession = namedtuple("UserSession", "info token")
+
 class Sessions:
   def __init__(self):
     self.__sessions = {}
@@ -41,11 +43,11 @@ class Sessions:
 
     info = self.user_info(client)
 
-    user = {
-      'token': token,
-      'info': info}
+    user = UserSession(info=info, token=token)
 
-    self.__sessions[info['id']] = user
+    self.__sessions[user.info['id']] = user
+
+    return user
 
   def logout(self, user_id):
     del self.__sessions[user_id]
