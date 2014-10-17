@@ -39,9 +39,9 @@ class Sessions:
     return json.loads(resp.content.decode('utf-8'))
 
   def login(self, token):
-    client = self.user_session(token)
+    client = self.user_session(token=token)
 
-    info = self.user_info(client)
+    info = self.user_info(client=client)
 
     user = UserSession(info=info, token=token)
 
@@ -98,11 +98,16 @@ def handle_process():
     client_secret=config.OAUTH_GOOGLE_SECRET,
     code=bottle.request.GET.get('code'))
 
-  sessions.login(token)
+  user = sessions.login(token)
 
-  req = google.get(config.GOOGLE_USER_INFO_URI)
-
-  userinfo = json.loads(req.content.decode('utf-8'))
+  bottle.response.set_cookie(
+    name=config.SESSION_COOKIE_ID,
+    value=user.info['id'],
+    secret=config.SESSION_COOKIE_SECRET,
+    path="/",
+    # httponly=True,
+    secure=True,
+    expires=user.token['expires_at'])
 
   bottle.redirect("/")
   # bottle.redirect(app.get_url("userinfo", user_id=userinfo['id']))
