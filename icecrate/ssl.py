@@ -22,3 +22,12 @@ class SSLWSGIRefServer(ServerAdapter):
      certfile=config.SSL_CERTIFICATE,  # path to certificate
      server_side=True)
     srv.serve_forever()
+
+def use_https(app):
+  """https://github.com/defnull/bottle/issues/347#issuecomment-6575466
+
+  """
+  def https_app(environ, start_response):
+    environ['wsgi.url_scheme'] = 'https'
+    return app(environ, start_response)
+  return https_app

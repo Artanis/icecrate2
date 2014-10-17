@@ -24,30 +24,33 @@ def setup_db():
 
   user_id = "org.couchdb.user:{user}".format(user=config.DB_USER)
 
-  print("checking database user...", end="")
+  print("checking database user... ", end="")
   if user_id not in usersdb:
+    print("missing.\ncreating database user... ", end="")
     usersdb.save({
       "_id": user_id,
       "type": "user",
       "name": config.DB_USER,
       "password": config.DB_PASS,
       "roles": []})
-  print(" ok.")
+  print("ok.")
 
   # setting up database
-  print("checking database...", end="")
+  print("checking database... ", end="")
   if config.DB_NAME not in server:
+    print("missing.\ncreating database... ", end="")
     server.create(config.DB_NAME)
 
   appdb = server[config.DB_NAME]
-  print(" ok.")
+  print("ok.")
 
 
-  print("checking _security object...", end="")
+  print("checking _security object... ", end="")
   security = appdb.security
   security_is_dirty = False
 
   if "admins" not in security:
+    print("empty.\nsetting up _security... ", end="")
     security['admins'] = {}
     security_is_dirty = True
 
@@ -59,7 +62,6 @@ def setup_db():
     security['admins']['names'].append(config.DB_USER)
     security_is_dirty = True
 
-
   if "roles" not in security.get("admins"):
     security['admins']['roles'] = ["admins"]
     _security_is_dirty = True
@@ -67,7 +69,7 @@ def setup_db():
   if security_is_dirty:
     appdb.security = security
 
-  print(" ok.")
+  print("ok.")
 
   # TODO: make sure these are removed from config files
   # (when they are put there).
