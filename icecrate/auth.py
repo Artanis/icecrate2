@@ -1,6 +1,7 @@
 import json
 import urllib.parse
 import uuid
+from functools import wraps
 from collections import namedtuple
 
 import bottle
@@ -14,40 +15,87 @@ oauth_state = None
 
 UserSession = namedtuple("UserSession", "info token")
 
+def require(fn):
+  """Requires the user to be signed in to access the resource.
+
+  Returns 401 status if user is not signed in. Inserts a UserSession
+  object into kwargs otherwise.
+
+  """
+
+  @wraps(fn)
+  def wrapper(*args, **kwargs):
+    session_id = bottle.request.get_cookie(
+      config.get("session", "cookie_id"),
+      secret=config.get("session", "cookie_secret"))
+
+    if session_id is None:
+      # not logged in (no cookie)
+      bottle.response.status = '401 Unauthorized'
+      return
+
+    session = None
+    if not kwargs.get('user_session'):
+      # Get the session state if we don't have one already.
+      session = sessions.user_session(session_id=session_id)
+
+    if session is None:
+      # not logged in (no session matching provided ID)
+      bottle.response.status = '401 Unauthorized'
+      return
+
+    kwargs['user_session'] = session
+    print(session_id)
+    print(kwargs['user_session'])
+
+    return fn(*args, **kwargs)
+
+  return wrapper
+
+
 class Sessions:
   def __init__(self):
     self.__sessions = {}
 
-  def user_session(self, *, token=None, user_id=None):
-    if token is None and user_id is not None:
-      token = self.__sessions[user_id]['token']
+  def user_session(self, session_id):
+    return self.__sessions[session_id]
+
+  def make_session(self, *, token=None, session_id=None):
+    if token is None:
+      if session_id is not None:
+        token = self.__sessions[session_id].token
+      else:
+        return None
 
     return oauth.OAuth2Session(
       # standard session open
       client_id=config.get("oauth.google", "client_id"),
-      token=token,
+      token=token)
 
-      # auto-refreshing access token
-      auto_refresh_url=config.get("oauth.google", "refresh_uri"),
-      auto_refresh_kwargs={
-        'client_id': config.get("oauth.google", "client_id"),
-        'client_secret': config.get("oauth.google", "client_secret")},
-      token_updater=self.login)
-
-  def user_info(self, *, client=None, user_id=None):
-    resp = client.get(config.get("oauth.google", "user_info"))
-    return json.loads(resp.content.decode('utf-8'))
+      # # auto-refreshing access token
+      # auto_refresh_url=config.get("oauth.google", "refresh_uri"),
+      # auto_refresh_kwargs={
+      #   'client_id': config.get("oauth.google", "client_id"),
+      #   'client_secret': config.get("oauth.google", "client_secret")},
+      # token_updater=self.login)
 
   def login(self, token):
-    client = self.user_session(token=token)
+    client = self.make_session(token=token)
 
-    info = self.user_info(client=client)
+    resp = client.get(config.get("oauth.google", "user_info"))
+    info = json.loads(resp.content.decode('utf-8'))
 
     user = UserSession(info=info, token=token)
 
-    self.__sessions[user.info['id']] = user
+    # StackOverflow suggests this isn't very secure for session
+    # identifiers, but offered recommendations that use os.urandom(),
+    # same as the UUID module's fully random identifiers, such as uuid4.
+    # ¯\_('')_/¯
+    session_id = uuid.uuid4().hex
 
-    return user
+    self.__sessions[session_id] = user
+
+    return session_id, user.token['expires_at']
 
   def logout(self, user_id):
     del self.__sessions[user_id]
@@ -77,8 +125,8 @@ def handle_login():
     scope        = config.get("oauth.google", "scopes"))
 
   auth_uri, state = google.authorization_url(
-    config.get("oauth.google", "auth_uri"),
-    approval_prompt='force')
+    config.get("oauth.google", "auth_uri"))
+    # approval_prompt='force')
 
   oauth_state = state
 
@@ -98,15 +146,15 @@ def handle_process():
     client_secret=config.get("oauth.google", "client_secret"),
     code=bottle.request.GET.get('code'))
 
-  user = sessions.login(token)
+  session_id, expires = sessions.login(token)
 
   bottle.response.set_cookie(
     name=config.get("session", "cookie_id"),
-    value=user.info['id'],
+    value=session_id,
     secret=config.get("session", "cookie_secret"),
     path="/",
     # httponly=True,
     secure=True,
-    expires=user.token['expires_at'])
+    expires=expires)
 
   bottle.redirect("/")
