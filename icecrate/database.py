@@ -5,24 +5,29 @@ from icecrate import config
 # bleh. dunno if security hole.
 # TODO: Find a better way.
 server_url = "http://{addr}:{port}/".format(
-  addr=config.COUCHDB_SERVER_ADDR,
-  port=config.COUCHDB_SERVER_PORT)
+  addr=config.get("database", "addr"),
+  port=config.get("database", "port"))
 
 def setup_db():
+  # TODO: make this an entry point dedicated to app setup.
+
   # if these don't exist, we're not setting up the database, no matter
-  # the current state.
-  if not all([config.TEMP_USER_DB, config.TEMP_ADMIN_USER, config.TEMP_ADMIN_PASS]):
+  # the current state._db
+  expected_fields = ("user", "passwd", "users_db")
+  present_fields = tuple(config["database.admin"].keys())
+  if not all((field in present_fields) for field in expected_fields):
     return
 
   server = couchdb.Server(server_url)
   print("WARNING: using admin credentials!")
   server.resource.credentials = (
-    config.TEMP_ADMIN_USER, config.TEMP_ADMIN_PASS)
+    config.get("database.admin", "user"),
+    config.get("database.admin", "passwd"))
 
   # setting up database user
-  usersdb = server[config.TEMP_USER_DB]
+  usersdb = server[config.get("database.admin", "users_db")]
 
-  user_id = "org.couchdb.user:{user}".format(user=config.DB_USER)
+  user_id = "org.couchdb.user:{user}".format(user=config.get("database", "app_user"))
 
   print("checking database user... ", end="")
   if user_id not in usersdb:
@@ -30,18 +35,18 @@ def setup_db():
     usersdb.save({
       "_id": user_id,
       "type": "user",
-      "name": config.DB_USER,
-      "password": config.DB_PASS,
+      "name": config.get("database", "app_user"),
+      "password": config.get("database", "app_passwd"),
       "roles": []})
   print("ok.")
 
   # setting up database
   print("checking database... ", end="")
-  if config.DB_NAME not in server:
+  if config.get("database", "app_db") not in server:
     print("missing.\ncreating database... ", end="")
-    server.create(config.DB_NAME)
+    server.create(config.get("database", "app_db"))
 
-  appdb = server[config.DB_NAME]
+  appdb = server[config.get("database", "app_db")]
   print("ok.")
 
 
@@ -58,8 +63,8 @@ def setup_db():
     security['admins']['names'] = []
     security_is_dirty = True
 
-  if config.DB_USER not in security['admins']['names']:
-    security['admins']['names'].append(config.DB_USER)
+  if config.get("database", "app_user") not in security['admins']['names']:
+    security['admins']['names'].append(config.get("database", "app_user"))
     security_is_dirty = True
 
   if "roles" not in security.get("admins"):
@@ -71,15 +76,11 @@ def setup_db():
 
   print("ok.")
 
-  # TODO: make sure these are removed from config files
-  # (when they are put there).
-  del config.TEMP_USER_DB
-  del config.TEMP_ADMIN_USER
-  del config.TEMP_ADMIN_PASS
-
 def connect():
   setup_db()
   server = couchdb.Server(server_url)
-  server.resource.credentials = (config.DB_USER, config.DB_PASS)
+  server.resource.credentials = (
+    config.get("database", "app_user"),
+    config.get("database", "app_passwd"))
 
   return server

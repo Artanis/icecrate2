@@ -24,18 +24,18 @@ class Sessions:
 
     return oauth.OAuth2Session(
       # standard session open
-      client_id=config.OAUTH_GOOGLE_CLIENT_ID,
+      client_id=config.get("oauth.google", "client_id"),
       token=token,
 
       # auto-refreshing access token
-      auto_refresh_url=config.OAUTH_GOOGLE_REFRESH_URI,
+      auto_refresh_url=config.get("oauth.google", "refresh_uri"),
       auto_refresh_kwargs={
-        'client_id': config.OAUTH_GOOGLE_CLIENT_ID,
-        'client_secret': config.OAUTH_GOOGLE_SECRET},
+        'client_id': config.get("oauth.google", "client_id"),
+        'client_secret': config.get("oauth.google", "client_secret")},
       token_updater=self.login)
 
   def user_info(self, *, client=None, user_id=None):
-    resp = client.get(config.GOOGLE_USER_INFO_URI)
+    resp = client.get(config.get("oauth.google", "user_info"))
     return json.loads(resp.content.decode('utf-8'))
 
   def login(self, token):
@@ -54,16 +54,16 @@ class Sessions:
 
 sessions = Sessions()
 
-@app.get("/userinfo/<user_id>", name="userinfo")
+@app.get("/userinfo", name="userinfo")
 def userinfo(user_id):
   global sessions
   token = sessions[user_id]
 
   client = oauth.OAuth2Session(
-    client_id=config.OAUTH_GOOGLE_CLIENT_ID,
+    client_id=config.get("oauth.google", "client_id"),
     token=token)
 
-  req = client.get(config.GOOGLE_USER_INFO_URI)
+  req = client.get(config.get("oauth.google", "user_info"))
 
   return json.loads(req.content.decode('utf-8'))
 
@@ -72,12 +72,12 @@ def handle_login():
   global oauth_state
 
   google = oauth.OAuth2Session(
-    client_id    = config.OAUTH_GOOGLE_CLIENT_ID,
-    redirect_uri = config.OAUTH_GOOGLE_REDIRECT,
-    scope        = config.OAUTH_GOOGLE_SCOPES)
+    client_id    = config.get("oauth.google", "client_id"),
+    redirect_uri = config.get("oauth.google", "redirect_to"),
+    scope        = config.get("oauth.google", "scopes"))
 
   auth_uri, state = google.authorization_url(
-    config.OAUTH_GOOGLE_AUTH_URI,
+    config.get("oauth.google", "auth_uri"),
     approval_prompt='force')
 
   oauth_state = state
@@ -89,25 +89,24 @@ def handle_process():
   global oauth_state
 
   google = oauth.OAuth2Session(
-    client_id=config.OAUTH_GOOGLE_CLIENT_ID,
-    redirect_uri=config.OAUTH_GOOGLE_REDIRECT,
+    client_id=config.get("oauth.google", "client_id"),
+    redirect_uri=config.get("oauth.google", "redirect_to"),
     state=oauth_state)
 
   token = google.fetch_token(
-    config.OAUTH_GOOGLE_TOKEN_URI,
-    client_secret=config.OAUTH_GOOGLE_SECRET,
+    config.get("oauth.google", "token_uri"),
+    client_secret=config.get("oauth.google", "client_secret"),
     code=bottle.request.GET.get('code'))
 
   user = sessions.login(token)
 
   bottle.response.set_cookie(
-    name=config.SESSION_COOKIE_ID,
+    name=config.get("session", "cookie_id"),
     value=user.info['id'],
-    secret=config.SESSION_COOKIE_SECRET,
+    secret=config.get("session", "cookie_secret"),
     path="/",
     # httponly=True,
     secure=True,
     expires=user.token['expires_at'])
 
   bottle.redirect("/")
-  # bottle.redirect(app.get_url("userinfo", user_id=userinfo['id']))

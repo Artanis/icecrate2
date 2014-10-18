@@ -19,7 +19,7 @@ class SSLWSGIRefServer(ServerAdapter):
     srv = make_server(self.host, self.port, handler, **self.options)
     srv.socket = ssl.wrap_socket (
      srv.socket,
-     certfile=config.SSL_CERTIFICATE,  # path to certificate
+     certfile=config.get("https", "certificate"),  # path to certificate
      server_side=True)
     srv.serve_forever()
 

@@ -157,5 +157,6 @@ def update_items():
 app.mount("/auth/", auth.app)
 
 def main():
-  ssl_server = ssl.SSLWSGIRefServer(host=config.HOST, port=config.PORT)
+  ssl_server = ssl.SSLWSGIRefServer(
+    host=config.get("host", "addr"), port=config.get("host", "port"))
   bottle.run(ssl.use_https(app), server=ssl_server)
