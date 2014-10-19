@@ -45,26 +45,28 @@ def uuids():
     "type": "uuids",
     "uuids": uuids}
 
-
 # Pull methods
 @app.get("/households")
-def list_households():
-  # TODO: User auth!
-  houses = []
-  for row in db.view('_all_docs'):
-    # TODO: Replace with CouchDB view, this line is SLOW
-    house = db[row.id]
-    if house['type'] == 'household':
-      houses.append(dict(house))
+@auth.require
+def list_households(user_session=None):
+  user_id = user_session.info['email']
+
+  resp = db.view("households/by_participants", key=user_id)
+
+  houses = (db[row.id] for row in resp)
 
   return {
     "type": "all_households",
-    "households": houses
+    "households": list(houses)
   }
 
 @app.get("/lists")
-def list_shopping():
-  # TODO: User auth!
+@auth.require
+def list_shopping(user_session=None):
+  user_id = user_session.info['email']
+
+  # TODO: Finish user auth!
+
   lists = []
   for row in db.view('_all_docs'):
     # TODO: Replace with CouchDB view, this line is SLOW
@@ -78,8 +80,12 @@ def list_shopping():
   }
 
 @app.get("/items")
-def list_items():
-  # TODO: User auth!
+@auth.require
+def list_items(user_session=None):
+  user_id = user_session.info['email']
+
+  # TODO: Finish user auth!
+
   items = []
   for row in db.view('_all_docs'):
     # TODO: Replace with CouchDB view, this line is SLOW
