@@ -6,7 +6,6 @@
     <!-- Third-party -->
     <script src="/static/bower/angular/angular.js"></script>
     <script src="/static/bower/angular-route/angular-route.js"></script>
-    <script src="/static/bower/satellizer/satellizer.js"></script>
 
     <!-- Project -->
     <script src="/static/local/icecrate/icecrate.js"></script>
@@ -37,12 +36,13 @@
           <li><a href="#/help">Help</a></li>
         </ul>
       </nav>
-      <section ng-controller="SyncState">
+      <section ng-controller="SyncState" ng-if="user.is_logged_in();">
         <h1>Last sync was on {{sync.last_sync | date : "medium"}}</h1>
         <p><a href="" ng-click="sync.pull_changes()">Get changes now</a></p>
         <p><a href="" ng-click="sync.push_changes()">Push changes now</a></p>
       </section>
     </header>
+    <div ng-if="!user.is_logged_in();" ng-include="'static/local/icecrate/templates/about.html'"></div>
     <div ng-view></div>
     <footer>
       <section title="copyright" id="copyright">
