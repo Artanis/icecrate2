@@ -8,7 +8,7 @@
     <script src="/static/bower/angular-route/angular-route.js"></script>
 
     <!-- Project -->
-    <script src="/static/local/icecrate/icecrate.js"></script>
+    <script src="/static/local/icecrate-core/icecrate-core.js"></script>
     <script src="/static/local/icecrate-store/icecrate-store.js"></script>
     <script src="/static/local/icecrate-sync/icecrate-sync.js"></script>
     <script src="/static/local/icecrate-user/icecrate-user.js"></script>
@@ -42,7 +42,7 @@
         <p><a href="" ng-click="sync.push_changes()">Push changes now</a></p>
       </section>
     </header>
-    <div ng-if="!user.is_logged_in();" ng-include="'static/local/icecrate/templates/about.html'"></div>
+    <div ng-if="!user.is_logged_in();" ng-include="'static/local/icecrate-core/templates/about.html'"></div>
     <div ng-view></div>
     <footer>
       <section title="copyright" id="copyright">

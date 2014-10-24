@@ -30,13 +30,13 @@ def user_houses(user_session):
 @app.get("/")
 def static_index():
   return bottle.static_file("index.html",
-    root=os.path.join(LOCAL_COMPONENTS, "icecrate"))
+    root=os.path.join(LOCAL_COMPONENTS, "icecrate-core"))
 
 @app.get("/cache.manifest")
 def cache_manifest():
   # this is absolutely off right now.
   # return bottle.static_file("cache.manfest",
-  #   root=os.path.join(LOCAL_COMPONENTS, "icecrate"))
+  #   root=os.path.join(LOCAL_COMPONENTS, "icecrate-core"))
   pass
 
 @app.get("/static/<src:re:(bower|local)>/<filepath:path>")
