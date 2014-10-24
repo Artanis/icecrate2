@@ -1,0 +1,8 @@
+<div ng-controller="NewShoppingList">
+  <h1>Create New Shopping List</h1>
+  <input type="text" ng-model="new_list.name" placeholder="Shopping List Title"></input>
+  <select ng-model="new_list.household"
+    ng-options="household._id as household.name for household in households">
+  </select>
+  <input type="submit" value="Create" ng-click="create_new_list(new_list);"></input><br/>
+</div>

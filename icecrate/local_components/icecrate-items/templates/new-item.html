@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<section>
+  <h1>Enter a new item</h1>
+  <input type="text" placeholder="Item UPC" ng-model="new_item.upc"></input><br/>
+  <input type="text" placeholder="Item Name" ng-model="new_item.name"></input><br/>
+  <input type="number" placeholder="Size" ng-model="new_item.size.scalar"></input>
+  <input type="text" placeholder="Units" ng-model="new_item.size.units"></input><br/>
+  <select ng-model="new_item.household"
+    ng-options="household._id as household.name for household in households">
+  </select><br/>
+  <input type="submit" value="Create Item" ng-click="create_new_item(new_item);"></submit>
+</section>
