@@ -229,29 +229,23 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
     } else if (itemdata === undefined) {
       deferred.reject("(IndexedDB.update_item) Expected item data, got nothing.");
     } else {
-      var transaction = db.transaction(['items'], 'readwrite');
-      var store = transaction.objectStore('items');
-
       // might need to wait for UUID before insertion, so either wrap
       // the existing id in a promise, or wait for the key generator.
       var _id = $q.when(itemdata._id || KeyGenerator.uuid());
       _id.then(function (data) {
-          console.log("confirming id.")
-          itemdata._id = data;
+        itemdata._id = data;
       }).then(function () {
-        console.log("storing item.")
+        var transaction = db.transaction(['items'], 'readwrite');
+        var store = transaction.objectStore('items');
         var req = store.put(itemdata);
         req.oncomplete = function (e) {
-          console.log("success!");
           deferred.resolve();
         };
         req.onerror = function (e) {
-          console.log("fail.");
           deferred.reject(e.value);
         };
       });
     }
-    console.log("return promise.");
 
     return deferred.promise;
   };
@@ -315,15 +309,13 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
     } else if (householddata === undefined) {
       deferred.reject("(IndexedDB.update_household) Expected household data, got nothing.");
     } else {
-      var transaction = db.transaction(['households'], 'readwrite');
-      var store = transaction.objectStore('households');
 
       var _id = $q.when(householddata._id || KeyGenerator.uuid());
-      _id.then(
-        function (data) {
-          householddata._id = data;
-      }).then(
-        function () {
+      _id.then(function (data) {
+        householddata._id = data;
+      }).then(function () {
+        var transaction = db.transaction(['households'], 'readwrite');
+        var store = transaction.objectStore('households');
         var req = store.put(householddata);
         req.oncomplete = function (e) {
           console.log("success!");
@@ -432,23 +424,21 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
     } else if (shoppinglistdata === undefined) {
       deferred.reject("(IndexedDB.update_shopping_list) Expected shopping list data, got nothing.");
     } else {
-      var transaction = db.transaction(['shopping'], 'readwrite');
-      var store = transaction.objectStore('shopping');
 
       var _id = $q.when(shoppinglistdata._id || KeyGenerator.uuid());
-      _id.then(
-        function (data) {
+      _id.then(function (data) {
         shoppinglistdata._id = data;
-      }).then(
-        function (data) {
-          var req = store.put(shoppinglistdata);
-          req.oncomplete = function (e) {
-            console.log("success!");
-            deferred.resolve(e.value);
-          };
-          req.onerror = function (e) {
-            deferred.reject(e.value);
-          };
+      }).then(function (data) {
+        var transaction = db.transaction(['shopping'], 'readwrite');
+        var store = transaction.objectStore('shopping');
+        var req = store.put(shoppinglistdata);
+        req.oncomplete = function (e) {
+          console.log("success!");
+          deferred.resolve(e.value);
+        };
+        req.onerror = function (e) {
+          deferred.reject(e.value);
+        };
       });
     }
 
