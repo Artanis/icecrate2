@@ -30,6 +30,25 @@ __icecrate_lists.controller('ShoppingLists', function($scope, IcecrateDB, $route
   }
 });
 
+__icecrate_lists.controller('NewShoppingList', function ($scope, $timeout, IcecrateDB, $routeParams) {
+  $scope.new_list = {
+    "type": "shopping-list",
+    "household": $routeParams.household_id || undefined,
+    "name": undefined,
+    "items": []};
+
+  IcecrateDB.all_households().then(function (data) {
+    $scope.households = data;
+  })
+
+  $scope.create_new_list = function (listdata) {
+    console.log("creating new shopping list.");
+    IcecrateDB.update_shopping_list(listdata).then(function (data) {
+      console.log("new list saved to database.");
+    });
+  };
+});
+
 __icecrate_lists.controller('ShoppingListDetail', function ($scope, IcecrateDB, $routeParams) {
   $scope.items = {}
   $scope.list = undefined;
