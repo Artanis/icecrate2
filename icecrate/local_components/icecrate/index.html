@@ -20,14 +20,14 @@
     <!-- Page Styles -->
     <link href="/static/local/icecrate/master.css" charset="utf-8" rel="stylesheet">
   </head>
-  <body>
+  <body ng-controller="UserController">
     <header>
       <a href="/"><h1>Icecrate</h1></a>
       <nav>
         <ul>
           <li><input type="text" ng-model="query.name" placeholder="Search items by name"></input></li>
           <li><input type="text" ng-model="query.upc" placeholder="Search items by UPC"></input></li>
-          <li class="mobile" zxing-scanlink></li>
+          <li zxing-scanlink></li>
           <li><a href="#/items">Items</a></li>
           <li><a href="#/households">Households</a></li>
           <li><a href="#/lists">Shopping Lists</a></li>
