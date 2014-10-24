@@ -25,6 +25,41 @@ __icecrate_items.filter('sumvals', function () {
   };
 });
 
+__icecrate_items.directive('newItem', function() {
+  return {
+    "templateUrl": "static/local/icecrate-items/templates/new-item.html",
+    "controller": "NewItemController"
+  };
+});
+
+__icecrate_items.controller('NewItemController', function ($scope, $location, $routeParams, IcecrateDB) {
+  var params = $location.search();
+
+  var empty_item_data = function () {
+    return {
+      "type": "item",
+      "household": $routeParams.household_id || undefined,
+      "upc": params.upc || undefined,
+      "name": params.name || undefined,
+      "size": {"units": undefined, "scalar": undefined},
+      "location": {}}
+  };
+
+  $scope.new_item = empty_item_data();
+
+  IcecrateDB.all_households().then(function (data) {
+    $scope.households = data;
+  });
+
+  $scope.create_new_item = function (new_item) {
+    console.log("creating new item.");
+    IcecrateDB.update_item(new_item).then(function (data) {
+      console.log("item saved to local database.");
+      $scope.new_item = empty_item_data();
+    });
+  };
+});
+
 __icecrate_items.controller('ItemList', function($scope, IcecrateDB, $routeParams) {
   var items = null;
 

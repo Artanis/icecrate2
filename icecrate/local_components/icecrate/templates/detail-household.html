@@ -4,18 +4,17 @@
   <section class="item-list" ng-controller="ItemList">
     <h1>Items</h1>
     <nav ng-controller="LocationList">
-      <section>
-        <h1>Filter by Location</h1>
-        <div ng-repeat="(loc, qty) in locations">
-          <input type="checkbox" checked="checked" id="chk-{{loc}}" ng-model="query.location[loc]"></input>
-          <label for="chk-{{loc}}" style="text-transform:capitalize;">{{loc}}</label>
-        </div>
-      </section>
+      <h1>Filter by Location</h1>
+      <div ng-repeat="(loc, qty) in locations">
+        <input type="checkbox" checked="checked" id="chk-{{loc}}" ng-model="query.location[loc]"></input>
+        <label for="chk-{{loc}}" style="text-transform:capitalize;">{{loc}}</label>
+      </div>
     </nav>
     <ul>
       <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict" ng-include="'/static/local/icecrate/templates/short-item.html'">
       </li>
     </ul>
+    <div new-item></div>
   </section>
   <div ng-controller="ShoppingLists" ng-include="'/static/local/icecrate/templates/list-shopping.html'">
   </div>

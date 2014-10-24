@@ -4,21 +4,21 @@
   <input type="submit" value="Save Changes" ng-click="update_item();"></input>
   <section title="edit item">
     <h1>Details</h1>
-    <input type="text" ng-model="item.name"></input><br/>
-    <input type="number" min="0" step="0.1" ng-model="item.size.scalar"></input>
-    <input type="text" ng-model="item.size.units"></input>
+    <input type="text" ng-model="item.name" placeholder="Item Name"></input><br/>
+    <input type="number" min="0" step="0.1" ng-model="item.size.scalar" placeholder="Size"></input>
+    <input type="text" ng-model="item.size.units" placeholder="Units"></input>
   </section>
   <section title="locations">
     <h1>Locations</h1>
     <form name="edit_location" ng-repeat="(loc, qty) in item.location" title="edit location">
       <label for="{{loc}}-qty">{{loc}}</label>
-      <input type="number" title="edit quantity" id="{{loc}}-qty" ng-model="item.location[loc]"></input>
-      <input type="submit" value="&plusmn;" title="Save Changes"></input>
+      <input type="number" placeholder="Quantity" id="{{loc}}-qty" ng-model="item.location[loc]"></input>
+      <input type="submit" value="&Delta;" title="Save Changes"></input>
     </form>
 
     <form name="new-location" title="new location">
-      <input type="text" ng-model="new_loc" style="text-transform:capitalize;"></input></td>
-      <input type="number" min="0" step="1" ng-model="new_qty"></input>
+      <input type="text" ng-model="new_loc" style="text-transform:capitalize;" placeholder="New Location"></input></td>
+      <input type="number" min="0" step="1" ng-model="new_qty" placeholder="New Quantity"></input>
       <input type="submit" value="+" title="add" ng-click="add_location();"></input>
     </form>
   </section>
