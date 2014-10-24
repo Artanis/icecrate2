@@ -1,4 +1,5 @@
 import os.path
+from itertools import chain
 from pprint import pprint
 
 import couchdb
@@ -14,6 +15,16 @@ BOWER_COMPONENTS = os.path.join(APP_ROOT, "bower_components")
 LOCAL_COMPONENTS = os.path.join(APP_ROOT, "local_components")
 
 app = bottle.Bottle()
+
+def user_houses(user_session):
+  """Iterator of all houses the logged in user is participating in.
+
+  """
+  user_id = user_session.info['email']
+
+  _, resp = db.list("households/participating_in", "by_participants", key=user_id)
+
+  yield from (db[house] for house in chain(resp['member'], resp['guest']))
 
 @app.get("")
 @app.get("/")
@@ -49,30 +60,18 @@ def uuids():
 @app.get("/households")
 @auth.require
 def list_households(user_session=None):
-  user_id = user_session.info['email']
-
-  resp = db.view("households/by_participants", key=user_id)
-
-  houses = (db[row.id] for row in resp)
-
   return {
     "type": "all_households",
-    "households": list(houses)
+    "households": list(user_houses(user_session))
   }
 
 @app.get("/lists")
 @auth.require
 def list_shopping(user_session=None):
-  user_id = user_session.info['email']
+  houses = list(i.id for i in user_houses(user_session))
 
-  # TODO: Finish user auth!
-
-  lists = []
-  for row in db.view('_all_docs'):
-    # TODO: Replace with CouchDB view, this line is SLOW
-    l = db[row.id]
-    if l['type'] == 'shopping-list':
-      lists.append(dict(l))
+  resp = db.view("shopping_lists/by_household", keys=houses)
+  lists = list(db[row.id] for row in resp)
 
   return {
     "type": "all_lists",
@@ -82,16 +81,13 @@ def list_shopping(user_session=None):
 @app.get("/items")
 @auth.require
 def list_items(user_session=None):
-  user_id = user_session.info['email']
+  houses = list(i.id for i in user_houses(user_session))
 
-  # TODO: Finish user auth!
-
-  items = []
-  for row in db.view('_all_docs'):
-    # TODO: Replace with CouchDB view, this line is SLOW
-    item = db[row.id]
-    if item['type'] == 'item':
-      items.append(dict(item))
+  print(houses)
+  _, resp = db.list("items/list_items", "by_household", keys=houses)
+  print(resp)
+  items = list(db[item_id] for item_id in resp['items'])
+  print(items)
 
   return {
     "type": "all_items",
@@ -99,8 +95,9 @@ def list_items(user_session=None):
   }
 
 # Push methods
+@auth.require
 @app.post("/households")
-def update_households():
+def update_households(user_session=None):
   new_houses = bottle.request.json.get('households')
 
   response = []
@@ -111,8 +108,10 @@ def update_households():
       _id, _rev = db.save(house)
       response.append(dict({"_id": _id, "_rev": _rev, "status": "ok"}))
     except couchdb.http.ResourceConflict:
-      dict({"_id": house['_id'], "_rev": house['_rev'], "status": "conflict"})
-      response.append(dict({"_id": house['_id'], "_rev": house['_rev'], "status": "conflict"}))
+      response.append({
+        "_id": house.get('_id'),
+        "_rev": house.get('_rev'),
+        "status": "conflict"})
 
   return {
     "type": "bulk_update_households",
@@ -120,7 +119,8 @@ def update_households():
   }
 
 @app.post("/lists")
-def update_lists():
+@auth.require
+def update_lists(user_session=None):
   new_lists = bottle.request.json.get('lists')
 
   response = []
@@ -140,7 +140,8 @@ def update_lists():
   }
 
 @app.post("/items")
-def update_items():
+@auth.require
+def update_items(user_session=None):
   new_items = bottle.request.json.get('items')
   # pprint(new_items)
 

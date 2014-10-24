@@ -13,7 +13,7 @@ app = bottle.Bottle()
 
 oauth_state = None
 
-UserSession = namedtuple("UserSession", "info token")
+UserSession = namedtuple("UserSession", "id info token")
 
 def require(fn):
   """Requires the user to be signed in to access the resource.
@@ -26,7 +26,7 @@ def require(fn):
   @wraps(fn)
   def wrapper(*args, **kwargs):
     session_id = bottle.request.get_cookie(
-      config.get("session", "cookie_id"),
+      config.get("session", "session_id"),
       secret=config.get("session", "cookie_secret"))
 
     if session_id is None:
@@ -41,12 +41,10 @@ def require(fn):
 
     if session is None:
       # not logged in (no session matching provided ID)
-      bottle.response.status = '401 Unauthorized'
+      bottle.redirect("/")
       return
 
     kwargs['user_session'] = session
-    print(session_id)
-    print(kwargs['user_session'])
 
     return fn(*args, **kwargs)
 
@@ -58,7 +56,7 @@ class Sessions:
     self.__sessions = {}
 
   def user_session(self, session_id):
-    return self.__sessions[session_id]
+    return self.__sessions.get(session_id)
 
   def make_session(self, *, token=None, session_id=None):
     if token is None:
@@ -85,35 +83,39 @@ class Sessions:
     resp = client.get(config.get("oauth.google", "user_info"))
     info = json.loads(resp.content.decode('utf-8'))
 
-    user = UserSession(info=info, token=token)
 
-    # StackOverflow suggests this isn't very secure for session
+    # StackOverflow suggests UUIDs aren't very secure for session
     # identifiers, but offered recommendations that use os.urandom(),
     # same as the UUID module's fully random identifiers, such as uuid4.
     # ¯\_('')_/¯
-    session_id = uuid.uuid4().hex
+    new_session = UserSession(id=uuid.uuid4().hex, info=info, token=token)
 
-    self.__sessions[session_id] = user
+    self.__sessions[new_session.id] = new_session
 
-    return session_id, user.token['expires_at']
+    # Session ID for server-side authentication
+    bottle.response.set_cookie(
+      name=config.get("session", "session_id"),
+      value=new_session.id,
+      secret=config.get("session", "cookie_secret"),
+      path="/",
+      httponly=True,
+      secure=True,
+      expires=new_session.token['expires_at'])
 
-  def logout(self, user_id):
-    del self.__sessions[user_id]
+    return
+
+  def logout(self, user_session):
+    del self.__sessions[user_session.id]
 
 sessions = Sessions()
 
-@app.get("/userinfo", name="userinfo")
-def userinfo(user_id):
-  global sessions
-  token = sessions[user_id]
-
-  client = oauth.OAuth2Session(
-    client_id=config.get("oauth.google", "client_id"),
-    token=token)
-
-  req = client.get(config.get("oauth.google", "user_info"))
-
-  return json.loads(req.content.decode('utf-8'))
+@app.get("/info", name="userinfo")
+@require
+def userinfo(user_session=None):
+  return {
+    "nickname": user_session.info.get('nickname'),
+    "name": user_session.info.get('name'),
+    "email": user_session.info.get('email')}
 
 @app.get("/login")
 def handle_login():
@@ -132,6 +134,12 @@ def handle_login():
 
   bottle.redirect(auth_uri)
 
+@app.get("/logout")
+@require
+def handle_logout(user_session=None):
+  sessions.logout(user_session)
+  bottle.redirect("/")
+
 @app.get("/process")
 def handle_process():
   global oauth_state
@@ -146,15 +154,6 @@ def handle_process():
     client_secret=config.get("oauth.google", "client_secret"),
     code=bottle.request.GET.get('code'))
 
-  session_id, expires = sessions.login(token)
-
-  bottle.response.set_cookie(
-    name=config.get("session", "cookie_id"),
-    value=session_id,
-    secret=config.get("session", "cookie_secret"),
-    path="/",
-    # httponly=True,
-    secure=True,
-    expires=expires)
+  sessions.login(token)
 
   bottle.redirect("/")
