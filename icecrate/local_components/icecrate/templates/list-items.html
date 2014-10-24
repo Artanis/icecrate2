@@ -1,9 +1,0 @@
-<!DOCTYPE html>
-<section>
-  <h1>Items</h1>
-  <ul>
-    <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc" ng-include="'/static/local/icecrate/templates/short-item.html'">
-  </ul>
-
-  <div new-item></div>
-</section>

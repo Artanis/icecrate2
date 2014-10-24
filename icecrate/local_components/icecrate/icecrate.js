@@ -18,7 +18,7 @@ Icecrate.config(function ($routeProvider) {
   // Household-scoped routes
   $routeProvider.when('/', {
     "controller":  "HouseholdList",
-    "templateUrl": "/static/local/icecrate/templates/list-households.html"
+    "templateUrl": "/static/local/icecrate-households/templates/list-households.html"
   });
 });
 

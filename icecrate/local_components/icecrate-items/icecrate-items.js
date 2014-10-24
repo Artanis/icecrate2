@@ -11,7 +11,7 @@ var __icecrate_items = angular.module(
 __icecrate_items.config(function ($routeProvider) {
   $routeProvider.when('/items', {
     "controller":  "ItemList",
-    "templateUrl": "/static/local/icecrate/templates/list-items.html"
+    "templateUrl": "/static/local/icecrate-items/templates/list-items.html"
   });
 });
 

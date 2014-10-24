@@ -10,7 +10,7 @@ var __icecrate_lists = angular.module(
 __icecrate_lists.config(function ($routeProvider) {
   $routeProvider.when('/lists', {
     "controller": "ShoppingLists",
-    "templateUrl": "/static/local/icecrate/templates/list-shopping.html"
+    "templateUrl": "/static/local/icecrate-lists/templates/list-lists.html"
   });
 });
 

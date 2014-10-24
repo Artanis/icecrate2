@@ -11,12 +11,12 @@
       </div>
     </nav>
     <ul>
-      <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict" ng-include="'/static/local/icecrate/templates/short-item.html'">
+      <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict" ng-include="'/static/local/icecrate-items/templates/short-item.html'">
       </li>
     </ul>
     <div new-item></div>
   </section>
-  <div ng-controller="ShoppingLists" ng-include="'/static/local/icecrate/templates/list-shopping.html'">
+  <div ng-controller="ShoppingLists" ng-include="'/static/local/icecrate-lists/templates/list-shopping.html'">
   </div>
   <section>
     <h1>Participants</h1>
