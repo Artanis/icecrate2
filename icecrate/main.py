@@ -22,9 +22,9 @@ def user_houses(user_session):
   """
   user_id = user_session.info['email']
 
-  _, resp = db.list("households/participating_in", "by_participants", key=user_id)
+  _, resp = db.list("icecrate/user-households", "households-by-participant", key=user_id)
 
-  yield from (db[house] for house in chain(resp['member'], resp['guest']))
+  yield from (house_id for house_id in chain(resp['member'], resp['guest']))
 
 @app.get("")
 @app.get("/")
@@ -62,15 +62,15 @@ def uuids():
 def list_households(user_session=None):
   return {
     "type": "all_households",
-    "households": list(user_houses(user_session))
+    "households": list(db[house_id] for house_id in user_houses(user_session))
   }
 
 @app.get("/lists")
 @auth.require
 def list_shopping(user_session=None):
-  houses = list(i.id for i in user_houses(user_session))
+  houses = list(user_houses(user_session))
 
-  resp = db.view("shopping_lists/by_household", keys=houses)
+  resp = db.view("icecrate/lists-by-household", keys=houses)
   lists = list(db[row.id] for row in resp)
 
   return {
@@ -81,13 +81,10 @@ def list_shopping(user_session=None):
 @app.get("/items")
 @auth.require
 def list_items(user_session=None):
-  houses = list(i.id for i in user_houses(user_session))
+  houses = list(user_houses(user_session))
 
-  print(houses)
-  _, resp = db.list("items/list_items", "by_household", keys=houses)
-  print(resp)
+  _, resp = db.list("icecrate/list-items", "items-by-household", keys=houses)
   items = list(db[item_id] for item_id in resp['items'])
-  print(items)
 
   return {
     "type": "all_items",
