@@ -1,0 +1,44 @@
+CACHE MANIFEST
+# icecrate2-0.4.0-27-g95867ef
+
+CACHE:
+/index.html
+
+# Bower Components
+/static/bower/angular/angular.js
+/static/bower/angular-route/angular-route.js
+
+# Local Components
+/static/local/icecrate-core/icecrate-core.js
+/static/local/icecrate-core/templates/about.html
+/static/local/icecrate/master.css
+
+/static/local/icecrate-households/icecrate-households.js
+/static/local/icecrate-households/templates/detail-household.html
+/static/local/icecrate-households/templates/list-households.html
+/static/local/icecrate-households/templates/new-household.html
+/static/local/icecrate-households/templates/short-household.html
+
+/static/local/icecrate-items/icecrate-items.js
+/static/local/icecrate-items/templates/detail-item.html
+/static/local/icecrate-items/templates/list-items.html
+/static/local/icecrate-items/templates/new-item.html
+/static/local/icecrate-items/templates/short-item.html
+
+/static/local/icecrate-lists/icecrate-lists.js
+/static/local/icecrate-lists/templates/detail-list.html
+/static/local/icecrate-lists/templates/list-lists.html
+/static/local/icecrate-lists/templates/new-list.html
+
+/static/local/icecrate-user/icecrate-user.js
+/static/local/icecrate-user/templates/sign-in.html
+
+/static/local/icecrate-store/icecrate-store.js
+/static/local/icecrate-sync/icecrate-sync.js
+
+/static/local/zxing/zxing.js
+
+NETWORK:
+/households
+/lists
+/items
