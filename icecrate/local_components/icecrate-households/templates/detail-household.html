@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <section>
-  <h1>{{household.name}}</h1>
-  <section class="item-list" ng-controller="ItemList">
-    <h1>Items</h1>
+  <!-- Bootstrap -->
+  <ul class="nav nav-tabs nav-justified">
+    <li><a><span class="glyphicon glyphicon-home"></span> {{household.name}}</a></li>
+    <li><a href="#/households/{{household._id}}/items"><span class="glyphicon glyphicon-list"></span> Items</a></li>
+    <li><a href="#/households/{{household._id}}/lists"><span class="glyphicon glyphicon-list-alt"></span> Shopping Lists</a></li>
+    <li><a href="#/households/{{household._id}}/users"><span class="glyphicon glyphicon-user"></span> Participants</a></li>
+    <li><a href="#/households/{{household._id}}/admin"><span class="glyphicon glyphicon-cog"></span> Administration</a></li>
+  </ul>
+
+  <!-- Old -->
+  <!-- Item List -->
+  <section ng-show="subpage === 'items';" class="item-list" ng-controller="ItemList">
     <nav ng-controller="LocationList">
       <h1>Filter by Location</h1>
       <div ng-repeat="(loc, qty) in locations">
@@ -16,45 +25,46 @@
     </ul>
     <div new-item></div>
   </section>
-  <div ng-controller="ShoppingLists" ng-include="'/static/local/icecrate-lists/templates/list-shopping.html'">
+  <!-- Shopping Lists -->
+  <div ng-show="subpage === 'lists';" ng-controller="ShoppingLists" ng-include="'/static/local/icecrate-lists/templates/list-lists.html'">
   </div>
-  <section>
+
+  <!-- Participants -->
+  <section ng-show="subpage === 'users';">
     <h1>Participants</h1>
     <section>
       <h1>Members</h1>
       <a href="">Invite a new member</a>
       <ul>
-        <li ng-repeat="member in household.members">
-          {{member}}
-        </li>
+        <li ng-repeat="member in household.members">{{member}}</li>
       </ul>
     </section>
     <section>
       <h1>Guests</h1>
       <a href="">Invite a guest</a>
-      <ul>
-        <li ng-repeat="guest in household.guests">
-          {{guest}} <a href="" ng-click="remove_guest(guest)">Remove<a>
-        </li>
+      <ul ng-if="household.guests.length > 0;">
+        <li ng-repeat="guest in household.guests">{{guest}} <a href="" ng-click="remove_guest(guest)">Remove</a></li>
       </ul>
     </section>
+  </section>
+
+  <!-- Administration -->
+  <section  ng-show="subpage === 'admin';">
+    <h1>Administration</h1>
     <section>
-      <h1>Administration</h1>
-      <section>
-        <h1>Edit Household</h1>
-        <form title="Edit Household Name">
-          <label for="edit-household-name">Edit Name</label>
-          <input type="text" id="edit-household-name" name="edit-household-name" ng-model="household.name"></input>
-          <input type="submit" value="Save Changes" ng-click="update_household();"></input>
-        </form>
-      </section>
-      <section>
-        <h1>Leave this household?</h1>
-        <p>This action cannot be undone!</p>
-        <form>
-          <input type="submit" value="Leave"></input>
-        </form>
-      </section>
+      <h1>Edit Household</h1>
+      <form title="Edit Household Name">
+        <label for="edit-household-name">Edit Name</label>
+        <input type="text" id="edit-household-name" name="edit-household-name" ng-model="household.name"></input>
+        <input type="submit" value="Save Changes" ng-click="update_household();"></input>
+      </form>
+    </section>
+    <section>
+      <h1>Leave this household?</h1>
+      <p>This action cannot be undone!</p>
+      <form>
+        <input type="submit" value="Leave"></input>
+      </form>
     </section>
   </section>
 </section>

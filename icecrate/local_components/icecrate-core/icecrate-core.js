@@ -4,9 +4,11 @@ var Icecrate = angular.module(
   'icecrate.core',
   [
     'ngRoute',
+    'ui.bootstrap',
     'ZXing',
     'icecrate.store',
     'icecrate.sync',
+    'icecrate.ui',
     'icecrate.user',
     'icecrate.households',
     'icecrate.lists',

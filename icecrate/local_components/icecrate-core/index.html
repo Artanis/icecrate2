@@ -2,47 +2,101 @@
 <html ng-app="icecrate.core">
   <head>
     <title>Icecrate</title>
+    <meta name="viewport" content="width=device-width, maximum-scale=1, minimum-scale=1" />
 
     <!-- Third-party -->
     <script src="/static/bower/angular/angular.js"></script>
     <script src="/static/bower/angular-route/angular-route.js"></script>
+    <script src="/static/bower/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="/static/bower/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <link  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" rel="stylesheet" charset="utf-8">
 
     <!-- Project -->
     <script src="/static/local/icecrate-core/icecrate-core.js"></script>
     <script src="/static/local/icecrate-store/icecrate-store.js"></script>
     <script src="/static/local/icecrate-sync/icecrate-sync.js"></script>
+    <script src="/static/local/icecrate-ui/icecrate-ui.js"></script>
     <script src="/static/local/icecrate-user/icecrate-user.js"></script>
     <script src="/static/local/icecrate-households/icecrate-households.js"></script>
     <script src="/static/local/icecrate-lists/icecrate-lists.js"></script>
     <script src="/static/local/icecrate-items/icecrate-items.js"></script>
     <script src="/static/local/zxing/zxing.js"></script>
-
-    <!-- Page Styles -->
-    <link href="/static/local/icecrate-core/master.css" charset="utf-8" rel="stylesheet">
+    <link  href="/static/local/icecrate-core/master.css" rel="stylesheet" charset="utf-8">
   </head>
   <body ng-controller="UserController">
-    <header>
-      <a href="/"><h1>Icecrate</h1></a>
-      <nav>
-        <ul>
-          <li><input type="text" ng-model="query.name" placeholder="Search items by name"></input></li>
-          <li><input type="text" ng-model="query.upc" placeholder="Search items by UPC"></input></li>
-          <li zxing-scanlink></li>
-          <li><a href="#/items">Items</a></li>
-          <li><a href="#/households">Households</a></li>
-          <li><a href="#/lists">Shopping Lists</a></li>
-          <li user-signin></li>
-          <li><a href="#/about">About</a></li>
-          <li><a href="#/help">Help</a></li>
-        </ul>
-      </nav>
-      <section ng-controller="SyncState" ng-if="user.is_logged_in();">
-        <h1>Last sync was on {{sync.last_sync | date : "medium"}}</h1>
-        <p><a href="" ng-click="sync.pull_changes()">Get changes now</a></p>
-        <p><a href="" ng-click="sync.push_changes()">Push changes now</a></p>
-      </section>
-    </header>
-    <div ng-if="!user.is_logged_in();" ng-include="'static/local/icecrate-core/templates/about.html'"></div>
+    <!-- UI-Bootstrap -->
+    <nav class="navbar navbar-default nav-bar-static-top" role="navigation" ng-controller="NavController">
+      <div class="container">
+        <!-- Small Screens -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" ng-click="isCollapsed = !isCollapsed;">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!-- Branding -->
+        <a class="navbar-brand" href="/">Icecrate</a>
+
+        <!-- Navigation -->
+        <div class="collapse navbar-collapse" ng-class="isCollapsed?'collapse':'in';">
+          <ul class="nav navbar-nav">
+            <!-- Scanning -->
+            <li zxing-scanlink></li>
+          </ul>
+          
+          <!-- Filtering -->
+          <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" ng-model="query.upc" placeholder="Filter items by UPC"></input>
+              <input type="text" class="form-control" ng-model="query.name" placeholder="Filter items by name"></input>
+            </div>
+          </form>
+
+          <ul class="nav navbar-nav navbar-right">
+            <!-- User Navigation and Sign-out -->
+            <li ng-show="user.is_logged_in();" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-user"></span> {{user.get_name();}} <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#/households"><span class="glyphicon glyphicon-home"></span> Households</a></li>
+                <li><a href="#/lists"><span class="glyphicon glyphicon-list-alt"></span> Shopping Lists</a></li>
+                <li><a href="#/items"><span class="glyphicon glyphicon-list"></span> Items</a></li>
+                <li class="divider"></li>
+                <li><a href='/auth/logout'><span class="glyphicon glyphicon-log-out"></span> Sign out</a></li>
+              </ul>
+            </li>
+
+            <!-- User sign-in -->
+            <li ng-show="!user.is_logged_in();">
+              <a href='/auth/login'><span class="glyphicon glyphicon-log-in"></span> Sign in with Google+</a>
+            </li>
+
+            <!-- Misc navigation -->
+            <li><a href="#/about">About</a></li>
+            <li><a href="#/help">Help</a></li>
+
+            <!-- Advanced Actions -->
+            <!-- TODO: Automate! -->
+            <li ng-show="user.is_logged_in();" class="dropdown" ng-controller="SyncState">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-cog"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li style="font-size: smaller;"><a><span class="glyphicon glyphicon-transfer"></span> {{sync.last_sync | date : "medium"}}</a></li>
+                <li class="divider"></li>
+                <li><a><span class="glyphicon glyphicon-download"></span> Pull changes</a></li>
+                <li><a><span class="glyphicon glyphicon-upload"></span> Push changes</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Old Stuff -->
     <div ng-view></div>
     <footer>
       <section title="copyright" id="copyright">

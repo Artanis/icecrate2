@@ -19,18 +19,19 @@ __icecrate_households.config(function ($routeProvider) {
     "templateUrl": "/static/local/icecrate-households/templates/detail-household.html"
   });
 
-  $routeProvider.when('/households/new', {
-    "controller": "NewHousehold",
-    "templateUrl": "/static/local/icecrate-households/templates/new-household.html"
-  })
+  $routeProvider.when('/households/:household_id/:subpage', {
+    "controller":  "DetailHousehold",
+    "templateUrl": "/static/local/icecrate-households/templates/detail-household.html"
+  });
 
   $routeProvider.when('/households/:household_id/items/:item_upc', {
     "controller":  "DetailItem",
     "templateUrl": "/static/local/icecrate-items/templates/detail-item.html"
   });
+
   $routeProvider.when('/households/:household_id/lists/:list_id', {
     "controller": "ShoppingListDetail",
-    "templateUrl": "/static/local/icecrate-lists/templates/detail-shopping.html"
+    "templateUrl": "/static/local/icecrate-lists/templates/detail-list.html"
   });
 });
 
@@ -43,6 +44,9 @@ __icecrate_households.controller('HouseholdList', function ($scope, IcecrateDB, 
 
 __icecrate_households.controller('DetailHousehold', function($scope, IcecrateDB, $routeParams, UserService) {
   $scope.user = UserService;
+
+  $scope.subpage = $routeParams.subpage || "items";
+
   IcecrateDB.get_household_by_id($routeParams.household_id).then(function (data) {
     $scope.household = data;
     $scope.update_household = function () {

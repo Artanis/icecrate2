@@ -35,7 +35,7 @@ ZXing.controller('ScanReturn', function ($scope, $location) {
 ZXing.directive('zxingScanlink', function () {
   return {
     'controller': "ScanReturn",
-    'template': "<a href=\"zxing://scan/?ret={{ scanreturn }}\">Scan an item</a>"
+    'template': "<a href=\"zxing://scan/?ret={{ scanreturn }}\"><span class=\"glyphicon glyphicon-barcode\"></span> Scan an item</a>"
   };
 });
 

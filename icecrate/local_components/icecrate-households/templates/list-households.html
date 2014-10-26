@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <section title="households" ng-controller="HouseholdList">
   <h1>Households</h1>
-  <section class="short-household" ng-repeat="household in households" ng-include="'/static/local/icecrate-households/templates/short-household.html'"></section>
   <section ng-include="'/static/local/icecrate-households/templates/new-household.html'"></section>
+  <section class="short-household" ng-repeat="household in households" ng-include="'/static/local/icecrate-households/templates/short-household.html'"></section>
 </section>
