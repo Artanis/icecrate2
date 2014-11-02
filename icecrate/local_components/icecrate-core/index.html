@@ -45,7 +45,7 @@
             <!-- Scanning -->
             <li zxing-scanlink></li>
           </ul>
-          
+
           <!-- Filtering -->
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
@@ -53,6 +53,7 @@
               <input type="text" class="form-control" ng-model="query.name" placeholder="Filter items by name"></input>
             </div>
           </form>
+
 
           <ul class="nav navbar-nav navbar-right">
             <!-- User Navigation and Sign-out -->
@@ -87,8 +88,10 @@
               <ul class="dropdown-menu" role="menu">
                 <li style="font-size: smaller;"><a><span class="glyphicon glyphicon-transfer"></span> {{sync.last_sync | date : "medium"}}</a></li>
                 <li class="divider"></li>
-                <li><a><span class="glyphicon glyphicon-download"></span> Pull changes</a></li>
-                <li><a><span class="glyphicon glyphicon-upload"></span> Push changes</a></li>
+                <li><a href="" ng-click="sync.pull_changes();"><span class="glyphicon glyphicon-download"></span> Pull changes</a></li>
+                <li><a href="" ng-click="sync.push_changes();"><span class="glyphicon glyphicon-upload"></span> Push changes</a></li>
+                <li class="divider"></li>
+                <li><a href="" ng-click="sync.drop_changes();"><span class="glyphicon glyphicon-warning-sign"></span> Drop changes</a></li>
               </ul>
             </li>
           </ul>
@@ -97,7 +100,7 @@
     </nav>
 
     <!-- Old Stuff -->
-    <div ng-view></div>
+    <div ng-view class="container"></div>
     <footer>
       <section title="copyright" id="copyright">
         <p>&copy;2014 Erik Youngren</p>

@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <section>
   <!-- Bootstrap -->
+  <header class="page-header">
+    <h1><span class="glyphicon glyphicon-home"></span> {{household.name}}</h1>
+  </header>
+
   <ul class="nav nav-tabs nav-justified">
-    <li><a><span class="glyphicon glyphicon-home"></span> {{household.name}}</a></li>
     <li><a href="#/households/{{household._id}}/items"><span class="glyphicon glyphicon-list"></span> Items</a></li>
-    <li><a href="#/households/{{household._id}}/lists"><span class="glyphicon glyphicon-list-alt"></span> Shopping Lists</a></li>
+    <li><a href="#/households/{{household._id}}/lists"><span class="glyphicon glyphicon-list-alt"></span> Shopping&nbsp;Lists</a></li>
     <li><a href="#/households/{{household._id}}/users"><span class="glyphicon glyphicon-user"></span> Participants</a></li>
     <li><a href="#/households/{{household._id}}/admin"><span class="glyphicon glyphicon-cog"></span> Administration</a></li>
   </ul>
 
-  <!-- Old -->
   <!-- Item List -->
-  <section ng-show="subpage === 'items';" class="item-list" ng-controller="ItemList">
-    <nav ng-controller="LocationList">
-      <h1>Filter by Location</h1>
-      <div ng-repeat="(loc, qty) in locations">
-        <input type="checkbox" checked="checked" id="chk-{{loc}}" ng-model="query.location[loc]"></input>
-        <label for="chk-{{loc}}" style="text-transform:capitalize;">{{loc}}</label>
+  <section ng-show="subpage === 'items';" ng-controller="ItemList">
+    <div class="panel-body">
+      <div class="btn-group" ng-controller="LocationList">
+        <label class="btn btn-default icecrate-location" ng-click="query.location = {}">All</label>
+        <label class="btn btn-default icecrate-location" ng-model="query.location[loc]" btn-checkbox ng-repeat="(loc, qty) in locations">{{loc}}</label>
       </div>
-    </nav>
-    <ul>
-      <li ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict" ng-include="'/static/local/icecrate-items/templates/short-item.html'">
-      </li>
-    </ul>
-    <div new-item></div>
+    </div>
+    <table class="table">
+      <tr><th>Quantity</th><th>Name</th><th>Size</th></tr>
+      <tr ng-repeat="item in items | orderBy:'name' | filter:query.name | filter:query.upc:strict | filter:query.locfilter">
+        <td>{{item.location | sumvals}}</td>
+        <td><a href="#/households/{{household._id}}/items/{{item.upc}}">{{item.name}}</a></td>
+        <td>{{item.size.scalar}} {{item.size.units || "count"}}</td>
+      </tr>
+    </table>
+    <div class="panel-body" new-item></div>
   </section>
+
   <!-- Shopping Lists -->
   <div ng-show="subpage === 'lists';" ng-controller="ShoppingLists" ng-include="'/static/local/icecrate-lists/templates/list-lists.html'">
   </div>
@@ -32,38 +38,41 @@
   <!-- Participants -->
   <section ng-show="subpage === 'users';">
     <h1>Participants</h1>
-    <section>
-      <h1>Members</h1>
-      <a href="">Invite a new member</a>
-      <ul>
-        <li ng-repeat="member in household.members">{{member}}</li>
-      </ul>
-    </section>
-    <section>
-      <h1>Guests</h1>
-      <a href="">Invite a guest</a>
-      <ul ng-if="household.guests.length > 0;">
-        <li ng-repeat="guest in household.guests">{{guest}} <a href="" ng-click="remove_guest(guest)">Remove</a></li>
-      </ul>
-    </section>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="member in household.members">
+        <span class="badge">Member</span>
+        {{member}}
+      </li>
+      <li class="list-group-item" ng-repeat="guest in household.guests">
+        <span class="badge">Guest</span>
+        {{guest}}
+        <button type="button" class="btn btn-warning" ng-click="remove_guest(guest)">Remove</button>
+      </li>
+    </ul>
   </section>
 
   <!-- Administration -->
   <section  ng-show="subpage === 'admin';">
     <h1>Administration</h1>
     <section>
-      <h1>Edit Household</h1>
-      <form title="Edit Household Name">
-        <label for="edit-household-name">Edit Name</label>
-        <input type="text" id="edit-household-name" name="edit-household-name" ng-model="household.name"></input>
-        <input type="submit" value="Save Changes" ng-click="update_household();"></input>
+      <form class="form-horizontal" role="form">
+        <div class="form-group form-inline">
+          <label for="edit-household-name" class="control-label col-sm-2">Edit Name</label>
+          <div class="col-sm-10">
+            <input type="text" id="edit-household-name" class="form-control" name="edit-household-name" ng-model="household.name"></input>
+            <input type="submit" value="Save" class="form-control" ng-click="update_household();"></input>
+          </div>
+        </div>
       </form>
     </section>
     <section>
-      <h1>Leave this household?</h1>
-      <p>This action cannot be undone!</p>
-      <form>
-        <input type="submit" value="Leave"></input>
+      <form class="form-horizontal" role="form">
+        <div class="form-group form-inline">
+          <label class="control-label col-sm-2">Leave Household</label>
+          <div class="col-sm-10">
+            <button type="button" class="btn btn-danger">Leave</button>
+          </div>
+        </div>
       </form>
     </section>
   </section>

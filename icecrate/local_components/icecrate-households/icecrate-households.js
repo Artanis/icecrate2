@@ -44,19 +44,23 @@ __icecrate_households.controller('HouseholdList', function ($scope, IcecrateDB, 
 
 __icecrate_households.controller('DetailHousehold', function($scope, IcecrateDB, $routeParams, UserService) {
   $scope.user = UserService;
+  $scope.household = undefined;
 
   $scope.subpage = $routeParams.subpage || "items";
 
+  $scope.update_household = function () {
+    IcecrateDB.update_household($scope.household).then(function (data) {
+      console.log("success!");
+    });
+  };
+
+  $scope.remove_guest = function (user_id) {
+    $scope.household.guests.splice($scope.household.guests.indexOf(user_id), 1);
+    $scope.update_household();
+  };
+
   IcecrateDB.get_household_by_id($routeParams.household_id).then(function (data) {
     $scope.household = data;
-    $scope.update_household = function () {
-      IcecrateDB.update_household($scope.household).then(function (data) {
-        console.log("success!");
-      });
-    };
-    $scope.remove_guest = function (user_id) {
-      household.guests.splice(household.guests.indexOf(user_id), 1);
-    }
   });
 });
 

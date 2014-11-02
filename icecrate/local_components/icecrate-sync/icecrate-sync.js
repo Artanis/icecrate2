@@ -7,7 +7,7 @@ var __icecrate_sync = angular.module(
   ]
 );
 
-__icecrate_sync.controller('SyncState', function ($scope, IcecrateLocal, IcecrateDBSync) {
+__icecrate_sync.controller('SyncState', function ($scope, IcecrateDB, IcecrateLocal, IcecrateDBSync) {
   $scope.sync = {};
   $scope.sync.last_sync = parseInt(IcecrateLocal.get('icecrate.sync.lastsync'));
 
@@ -20,6 +20,10 @@ __icecrate_sync.controller('SyncState', function ($scope, IcecrateLocal, Icecrat
 
   $scope.sync.push_changes = function () {
     IcecrateDBSync.push();
+  };
+
+  $scope.sync.drop_changes = function () {
+    IcecrateDB.clear();
   };
 });
 

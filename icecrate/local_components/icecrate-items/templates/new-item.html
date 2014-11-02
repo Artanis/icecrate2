@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <section>
-  <h1>Add a new item</h1>
-  <input type="text" placeholder="Item UPC" ng-model="new_item.upc"></input>
-  <input type="text" placeholder="Item Name (recommended)" ng-model="new_item.name"></input>
-  <br/>
-  <input type="number" placeholder="Size (optional)" ng-model="new_item.size.scalar"></input>
-  <input type="text" placeholder="Units (optional)" ng-model="new_item.size.units"></input>
-  <br/>
-  <select ng-model="new_item.household"
-    ng-options="household._id as household.name for household in households">
-  </select>
-  <input type="submit" value="Save New Item" ng-click="create_new_item(new_item);"></submit>
+  <form class="form-horizontal" role="form">
+    <div class="form-group form-inline">
+      <label for="newitemupc" class="col-sm-1 control-label">New Item</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="newitemupc" placeholder="UPC" ng-model="new_item.upc"></input>
+        <input type="text" class="form-control" placeholder="Name" ng-model="new_item.name"></input>
+      </div>
+    </div>
+    <div class="form-group form-inline">
+      <label for="newitemsizeunits" class="col-sm-1 control-label">Size</label>
+      <div class="col-sm-10">
+        <input type="number" step="0.01" id="newitemsizeunits" class="form-control" ng-model="new_item.size.scalar"></input>
+        <input type="text" class="form-control" placeholder="fl oz, lbs, kg, etc." ng-model="new_item.size.units"></input>
+      </div>
+    </div>
+    <div class="form-group form-inline">
+      <label for="newitemhousehold" class="col-sm-1 control-label">Household</label>
+      <div class="col-sm-10">
+        <select class="form-control" ng-model="new_item.household"
+          ng-options="household._id as household.name for household in households">
+        </select>
+      </div>
+    </div>
+    <div class="form-group form-inline">
+      <span class="col-sm-1"></span>
+      <div class="col-sm-10">
+        <input type="submit" class="form-control" value="Save New Item" ng-click="create_new_item(new_item);"></submit>
+      </div>
+    </div>
+  </form>
 </section>

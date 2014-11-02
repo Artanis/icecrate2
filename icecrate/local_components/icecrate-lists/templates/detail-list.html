@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <section>
-  <header>
-    <h1>{{list.name}}</h1>
-    <p><a href="#/households/{{household._id}}">{{household.name}}</a></p>
+  <header class="page-header">
+    <h1>{{list.name}} <small><a href="#/households/{{household._id}}">{{household.name}}</a></small></h1>
   </header>
 
-  <ul>
-    <li ng-repeat="item in items" ng-include="'/static/local/icecrate-lists/templates/short-item.html'"></li>
-    <li class="mobile" zxing-scanlink></li>
-  </ul>
+  <table class="table">
+    <tr><th>Quantity</th><th>Name</th><th>Size</th></tr>
+    <tr ng-repeat="item_id in list.items">
+      <td>{{items[item_id].location | sumvals}}</td>
+      <td><a href="#/households/{{household._id}}/items/{{items[item_id].upc}}">{{items[item_id].name}}</a></td>
+      <td>{{items[item_id].size.scalar}} {{items[item_id].size.units || "count"}}</td>
+    </tr>
+  </table>
+
+  <form class="form-horizontal" role="form">
+    <div class="form-group form-inline">
+      <label for="additemtolist" class="control-label col-sm-1">Add to List</label>
+      <div class="col-sm-10">
+        <select ng-model="incoming_item" class="form-control" id="additemtolist" ng-options="id as item.name for (id, item) in items"></select>
+        <input type="submit" class="form-control" value="Add" ng-click="add_item(incoming_item);"></input>
+      </div>
+    </div>
+  </form>
 </section>

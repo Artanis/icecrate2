@@ -50,24 +50,35 @@ __icecrate_lists.controller('NewShoppingList', function ($scope, $timeout, Icecr
 });
 
 __icecrate_lists.controller('ShoppingListDetail', function ($scope, IcecrateDB, $routeParams) {
-  $scope.items = {}
+  $scope.items = {};
   $scope.list = undefined;
   $scope.household = undefined;
 
-  var req = IcecrateDB.get_shopping_list_by_id($routeParams.list_id);
-  req.then(function (data) {
+  $scope.add_item = function (item_id) {
+    if ($scope.list.items.indexOf(item_id) === -1) {
+      $scope.list.items.push(item_id);
+      IcecrateDB.update_shopping_list($scope.list);
+    }
+  };
+
+  $scope.remove_item = function (item_id) {
+    $scope.list.items.splice($scope.list.items.indexOf(item_id), 1);
+    IcecrateDB.update_shopping_list($scope.list);
+  };
+
+  IcecrateDB.get_shopping_list_by_id($routeParams.list_id).then(function (data) {
     $scope.list = data;
   });
-  req.then(function (data) {
-    var items = {};
-    for (var i in data.items) {
-      IcecrateDB.get_item_by_id(data.items[i]).then(function (item) {
-        items[item._id] = item;
-      });
-    }
-    $scope.items = items;
-  });
+
   IcecrateDB.get_household_by_id($routeParams.household_id).then(function (data) {
     $scope.household = data;
+  });
+
+  IcecrateDB.get_items_by_household($routeParams.household_id).then(function (data) {
+    var i;
+    for(i in data) {
+      var item = data[i];
+      $scope.items[item._id] = item;
+    }
   });
 });

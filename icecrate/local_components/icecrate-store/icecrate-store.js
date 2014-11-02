@@ -70,6 +70,10 @@ IcecrateDB.service('IcecrateDB', function ($window, $q, KeyGenerator) {
     return deferred.promise;
   };
 
+  this.clear = function () {
+    $window.indexedDB.deleteDatabase('icecrate.db')
+  }
+
   // Items
   this.all_items = function () {
     var deferred = $q.defer();

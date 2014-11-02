@@ -97,6 +97,8 @@ __icecrate_items.controller('DetailItem', function($scope, IcecrateDB, $routePar
         $scope.new_loc = "";
         $scope.new_qty = "";
       }
+
+      $scope.update_item();
     };
   });
 });
