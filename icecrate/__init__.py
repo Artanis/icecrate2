@@ -1,6 +1,7 @@
 import os.path
 import configparser
 
+import couchdb
 from xdg import BaseDirectory as xdg
 
 config = configparser.ConfigParser()
@@ -13,7 +14,13 @@ config.read([
 
 from icecrate import database
 
-db_server = database.connect()
-import sys
 
-db = db_server[config.get("database", "app_db")]
+try:
+    db_server = database.connect()
+    db = db_server[config.get("database", "app_db")]
+except couchdb.http.Unauthorized:
+    print("CouchDB rejected {} user: Credentials incorrect.".
+        format(config.get("database", "app_user")))
+    
+    db_server = None
+    db = None

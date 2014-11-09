@@ -1,0 +1,63 @@
+Installing Icecrate
+===================
+
+Step 1: Install
+---------------
+::
+
+    pip install git+https://github.com/Artanis/icecrate2.git#egg=icecrate2
+
+OR
+
+::
+    
+    git clone https://github.com/Artanis/icecrate2.git
+    cd icecrate2
+    python setup.py install
+
+Step 2: External Dependencies
+-----------------------------
+
+Pip and setup.py will resolve most dependencies, however, there are two they
+cannot:
+
+* Bower, a node.js utility (`npm install bower`).
+* CouchApp, which currently only supports Python 2.
+
+Both these utilities are expected on $PATH.
+
+Step 3: Configure
+-----------------
+
+Create a config.ini file at ``$XDG_CONFIG_HOME/icecrate/config.ini``
+(``$XDG_CONFIG_HOME`` is usually .config) or ``/etc/icecrate/config.ini``.
+
+Here's a sample config.ini::
+
+    [host]
+    addr = localhost
+    port = 8000
+
+    [database]
+    addr = localhost
+    port = 5984
+    app_db = icecrate
+    app_user = icecrate
+    app_passwd = notagoodpassword
+
+    [https]
+    certificate = /path/to/ssl_sert.pem
+
+    [oauth.google]
+    client_id = 
+    client_secret =
+    redirect_to = 
+
+
+Step 4: Setup
+-------------
+
+setup the database, push the database-side code to CouchDB, and use
+bower to fetch the web dependencies::
+
+    icecrate-bootstrap

@@ -1,0 +1,4 @@
+include icecrate/defaults.ini
+include icecrate/bower.json
+recursive-include icecrate/local_components *.js *.css *.html
+recursive-include icecrate/couchdb_design *
