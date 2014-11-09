@@ -26,7 +26,7 @@ class install(_install):
     print(post_install_msg)
 
 setup(name="icecrate2",
-  version="0.3.0",
+  version="0.4.0",
   description="A slightly less-simple home inventory system.",
   author="Erik Youngren",
   author_email="artanis00+icecrate@gmail.com",
