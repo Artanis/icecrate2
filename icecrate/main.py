@@ -34,9 +34,8 @@ def static_index():
 
 @app.get("/cache.manifest")
 def cache_manifest():
-  # this is absolutely off right now.
-  # return bottle.static_file("cache.manfest",
-  #   root=os.path.join(LOCAL_COMPONENTS, "icecrate-core"))
+  return bottle.static_file("cache.manfest",
+     root=os.path.join(LOCAL_COMPONENTS, "icecrate-core"))
   pass
 
 @app.get("/static/<src:re:(bower|local)>/<filepath:path>")
